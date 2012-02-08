@@ -1,10 +1,18 @@
 (function() {
-  var app, blog, express, routes, stylus;
+  var Sequelize, UserProvider, app, blog, express, routes, seq, stylus, userProvier;
   express = require('express');
   routes = require('./routes');
   blog = require('./routes/blog');
   stylus = require('stylus');
+  Sequelize = require('sequelize');
   app = module.exports = express.createServer();
+  seq = module.exports = new Sequelize('blog', 'root', '', {
+    host: 'localhost',
+    port: '3306'
+  });
+  UserProvider = require('./model/UserProvider');
+  console.log(seq);
+  userProvier = new UserProvider(seq);
   app.configure(function() {
     app.set('views', __dirname + '/views');
     app.set('view engine', 'jade');
@@ -29,7 +37,15 @@
     return app.use(express.errorHandler());
   });
   app.get('/blog/:id', blog.single);
-  app.get('/', routes.index);
+  app.get('/', function(req, res) {
+    return userProvider.findUserById(1, function(error, u) {
+      return res.render('index', {
+        title: 'welcome',
+        user: u
+      });
+    });
+  });
+  app.get('/blog', blog.all);
   app.listen(3000);
   console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
 }).call(this);

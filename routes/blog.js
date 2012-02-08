@@ -10,4 +10,12 @@
       });
     });
   };
+  exports.all = function(req, res) {
+    return article.findAll(function(error, artis) {
+      return res.render('article_all', {
+        title: 'top 10 articles',
+        articles: artis
+      });
+    });
+  };
 }).call(this);

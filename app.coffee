@@ -2,8 +2,16 @@ express = require 'express'
 routes = require './routes'
 blog = require './routes/blog'
 stylus = require 'stylus'
+Sequelize = require 'sequelize'
+
 
 app = module.exports = express.createServer()
+seq = module.exports = new Sequelize 'blog', 'root', '', {host: 'localhost', port: '3306'}
+
+# module
+UserProvider = require './model/UserProvider'
+console.log seq
+userProvier = new UserProvider(seq)
 
 # Configuration
 
@@ -26,7 +34,12 @@ app.configure 'production', ()->
 # Routers
 
 app.get '/blog/:id', blog.single
-app.get '/', routes.index
+
+app.get '/', (req, res)->
+  userProvider.findUserById 1, (error, u)->
+    res.render 'index', {title: 'welcome', user: u}
+
+app.get '/blog', blog.all
 
 app.listen 3000
 

@@ -1,6 +1,6 @@
-User = require 'model/dummy/User'
-user = new User()
+UserProvider = require 'model/UserProvider'
+userProvier = new UserProvider 
 
 exports.index = (req, res)->
-  user.findUserById 1, (error, u)->
+  userProvider.findUserById 1, (error, u)->
     res.render 'index', {title: 'welcome', user: u}

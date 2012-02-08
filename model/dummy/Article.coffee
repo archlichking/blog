@@ -18,6 +18,14 @@ class Article
         owner_id: 1
         createdAt: '2012-02-07 21:12:32'
         updatedAt: '2012-02-07 21:12:32'
+      },
+      {
+        id:2
+        title: 'serious article'
+        body: 'no shit'
+        owner_id: 1
+        createdAt: '2012-02-09 21:12:32'
+        updatedAt: '2012-02-09 21:12:32'
       }
     ]
     @comment = new Comment()
@@ -45,5 +53,13 @@ class Article
       if d.owner_id is o_id
         ret.push d
     callback null, ret
-
+  
+  findAll: (callback)->
+    console.log "invoking findAll articles"
+    ret = []
+    for d in @dummy_data
+      @findArticleById d.id, (error, a)->
+        ret.push a
+    callback null, ret
+      
 module.exports = Article

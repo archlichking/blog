@@ -12,6 +12,13 @@
           owner_id: 1,
           createdAt: '2012-02-07 21:12:32',
           updatedAt: '2012-02-07 21:12:32'
+        }, {
+          id: 2,
+          title: 'serious article',
+          body: 'no shit',
+          owner_id: 1,
+          createdAt: '2012-02-09 21:12:32',
+          updatedAt: '2012-02-09 21:12:32'
         }
       ];
       this.comment = new Comment();
@@ -51,6 +58,19 @@
         if (d.owner_id === o_id) {
           ret.push(d);
         }
+      }
+      return callback(null, ret);
+    };
+    Article.prototype.findAll = function(callback) {
+      var d, ret, _i, _len, _ref;
+      console.log("invoking findAll articles");
+      ret = [];
+      _ref = this.dummy_data;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        d = _ref[_i];
+        this.findArticleById(d.id, function(error, a) {
+          return ret.push(a);
+        });
       }
       return callback(null, ret);
     };

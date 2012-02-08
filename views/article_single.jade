@@ -1,0 +1,7 @@
+div.article
+  div.title= article.title
+  div.article_body= article.body
+  - each comment in article.comments
+    div.comment
+      div.comment_body= comment.body
+      div.comment_owner= comment.owner_name

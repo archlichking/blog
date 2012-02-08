@@ -1,17 +1,22 @@
 User = require './User'
 Article = require './Article'
+Comment = require './Comment'
 
 dummy_user = new User()
 dummy_article = new Article()
+dummy_comment = new Comment()
 
-u = dummy_user.findUserById 1
-console.log u.email
+dummy_user.findUserById 1, (error, u)->
+  console.log u
 
-a = dummy_article.findArticleById 0
-console.log a.title
+dummy_comment.findCommentsByArticleId 1, (error, c)->
+  console.log c
 
-a = dummy_article.findArticleByTitle 'welcome'
-console.log a.body
+dummy_article.findArticleById 1, (error, a)->
+  console.log a
 
-a = dummy_article.findArticleByOwnerId 1
-console.log a.length
+dummy_article.findArticleByTitle 'welcome', (error, a)->
+  console.log a.body
+
+dummy_article.findArticleByOwnerId 1, (error, a)->
+  console.log a.length

@@ -1,0 +1,18 @@
+div.title= title
+
+!= messages()
+
+form(action='register', method='post')
+  lable email
+  input(type='text', name='email') email
+  p
+  label password
+  input(type='password', name='password') password
+  p  
+  label re_password
+  input(type='password', name='re_password') re_password
+  p
+  label name
+  input(type='text', name='name') name
+  p
+  input(type='submit', value='register')

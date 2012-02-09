@@ -1,19 +1,9 @@
 (function() {
-  var BaseProvider, UserProvider;
-  var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
-    for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
-    function ctor() { this.constructor = child; }
-    ctor.prototype = parent.prototype;
-    child.prototype = new ctor;
-    child.__super__ = parent.prototype;
-    return child;
-  };
-  BaseProvider = require('./BaseProvider');
+  var UserProvider;
   UserProvider = (function() {
-    __extends(UserProvider, BaseProvider);
     function UserProvider(seq) {
-      console.log(seq);
-      this.userDao = seq["import"](__dirname + '/template/user_seq_template');
+      this.seq = seq;
+      this.userDao = this.seq["import"](__dirname + '/template/user_seq_template');
     }
     UserProvider.prototype.findUserById = function(u_id, callback) {
       return this.userDao.find(u_id).on('success', function(u) {
@@ -32,20 +22,47 @@
     UserProvider.prototype.findUserByEmail = function(u_email, callback) {
       return this.userDao.find({
         where: {
-          name: u_email
+          email: u_email
         }
       }).on('success', function(u) {
         return callback(null, u);
       });
     };
-    UserProvider.prototype.addUser = function(u, callback) {
-      return this.userDao.build({
-        name: u.name,
-        email: u.email,
-        status: u.status,
-        password: u.password
-      }).save().on('success', function() {
-        return callback(null, null);
+    UserProvider.prototype.addUser = function(email, password, name, callback) {
+      return this.findUserByEmail(email, function(error, u) {
+        if (u) {
+          return callback('Dulplicate email', null);
+        } else {
+          return this.userDao.build({
+            name: name,
+            email: email,
+            password: password
+          }).save().on('success', function(u) {
+            if (u) {
+              return callback(null, u);
+            } else {
+              return callback('Registeration failed', null);
+            }
+          }).on('error', function(error) {
+            return callback('internal error', null);
+          });
+        }
+      });
+    };
+    UserProvider.prototype.authenticate = function(email, password, callback) {
+      return this.userDao.find({
+        where: {
+          email: email,
+          password: password
+        }
+      }).on('success', function(u) {
+        if (u) {
+          return callback(null, u);
+        } else {
+          return callback('Authentication failed', null);
+        }
+      }).on('error', function(error) {
+        return callback('internal error', null);
       });
     };
     return UserProvider;

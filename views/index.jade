@@ -1,4 +1,22 @@
 h1= title
-div.user
-  div.user_name= user.name
-  div.user_status= user.status
+
+!= messages()
+
+if user
+  div.user
+    div.user_name= user.name
+    div.user_status= user.status
+
+  a(href='/logout') logout
+
+else
+  form(method='post', action='/login')
+    label account
+    input(type='text', name='email')
+    p
+    label password
+    input(type='password', name='password')
+    p
+    input(type='submit', value='login')
+  
+  a(href='register_redirect') register

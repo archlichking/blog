@@ -1,4 +1,6 @@
 Sequelize = require 'sequelize'
+crypto = require 'crypto'
+
 seq = new Sequelize 'blog', 'root', '', {host: 'localhost', port: 3306}
 
 # initialize data model

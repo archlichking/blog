@@ -1,6 +1,7 @@
 (function() {
-  var Article, Comment, Sequelize, User, a, a2, c, c2, seq, u, u2;
+  var Article, Comment, Sequelize, User, a, a2, c, c2, crypto, seq, u, u2;
   Sequelize = require('sequelize');
+  crypto = require('crypto');
   seq = new Sequelize('blog', 'root', '', {
     host: 'localhost',
     port: 3306

@@ -1,13 +1,26 @@
 (function() {
-  var UserProvider, userProvier;
-  UserProvider = require('model/UserProvider');
-  userProvier = new UserProvider;
+  var seq, userProvider;
+  seq = new (require('sequelize'))('blog', 'root', '', {
+    host: 'localhost',
+    port: '3306'
+  });
+  userProvider = new (require('model/UserProvider'))(seq);
   exports.index = function(req, res) {
-    return userProvider.findUserById(1, function(error, u) {
+    if (req.session && req.session.user) {
+      req.flash('info', '');
       return res.render('index', {
         title: 'welcome',
-        user: u
+        user: req.session.user
       });
-    });
+    } else {
+      req.session = {
+        user: null
+      };
+      req.flash('info', '');
+      return res.render('index', {
+        title: 'welcome',
+        user: null
+      });
+    }
   };
 }).call(this);

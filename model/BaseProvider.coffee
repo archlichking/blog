@@ -1,5 +1,4 @@
 class BaseProvider
-  constructor: (seq)->
-    @sequelize = seq
+  constructor: (@sequelize)->
 
 module.exports = BaseProvider

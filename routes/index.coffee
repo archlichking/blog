@@ -1,6 +1,13 @@
-UserProvider = require 'model/UserProvider'
-userProvier = new UserProvider 
+seq = new (require('sequelize'))('blog', 'root', '', {host: 'localhost', port: '3306'})
+# module
+userProvider = new (require('model/UserProvider'))(seq)
 
 exports.index = (req, res)->
-  userProvider.findUserById 1, (error, u)->
-    res.render 'index', {title: 'welcome', user: u}
+  # init req.session.user to null anyway
+  if req.session and req.session.user
+    req.flash 'info', ''
+    res.render 'index', {title: 'welcome', user: req.session.user}
+  else
+    req.session = {user: null}
+    req.flash 'info', ''
+    res.render 'index', {title: 'welcome', user: null}

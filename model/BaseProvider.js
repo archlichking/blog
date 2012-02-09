@@ -1,8 +1,8 @@
 (function() {
   var BaseProvider;
   BaseProvider = (function() {
-    function BaseProvider(seq) {
-      this.sequelize = seq;
+    function BaseProvider(sequelize) {
+      this.sequelize = sequelize;
     }
     return BaseProvider;
   })();

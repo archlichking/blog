@@ -1,0 +1,3 @@
+Sequelize = require 'sequelize'
+
+

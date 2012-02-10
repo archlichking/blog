@@ -1,4 +1,4 @@
-Article = require 'model/dummy/Article'
+Article = require 'models/dummy/Article'
 article = new Article()
 
 exports.single = (req, res)->

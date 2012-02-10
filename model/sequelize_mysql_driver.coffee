@@ -1,3 +1,0 @@
-Sequelize = require 'sequelize'
-
-

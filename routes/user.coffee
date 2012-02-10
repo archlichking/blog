@@ -1,6 +1,6 @@
 seq = new (require('sequelize'))('blog', 'root', '', {host: 'localhost', port: '3306'})
 # module
-userProvider = new (require('model/UserProvider'))(seq)
+userProvider = new (require('models/UserProvider'))(seq)
 
 exports.logout = (req, res)->
   req.session = {user: null}

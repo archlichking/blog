@@ -6,5 +6,7 @@
       "express": "2.5.5"
     , "stylus": ">= 0.0.1"
     , "jade": ">= 0.0.1"
+    , "express-message": ">=0.0.2"
+    , "express-namespace": ">=0.0.4"
   }
 }

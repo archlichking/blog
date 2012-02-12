@@ -2,21 +2,13 @@ h1= title
 
 != messages()
 
-if user
-  div.user
-    div.user_name= user.name
-    div.user_status= user.status
-
-  a(href='/logout') logout
-
-else
-  form(method='post', action='/login')
-    label account
-    input(type='text', name='email')
-    p
-    label password
-    input(type='password', name='password')
-    p
-    input(type='submit', value='login')
+form(method='post', action='/user/login')
+  label account
+  input(type='text', name='email')
+  p
+  label password
+  input(type='password', name='password')
+  p
+  input(type='submit', value='login')
   
-  a(href='register_redirect') register
+a(href='/user/register_redirect') doesn't have an account?

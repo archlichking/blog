@@ -1,21 +1,3 @@
-seq = new (require('sequelize'))('blog', 'root', '', {host: 'localhost', port: '3306'})
-# module
-userProvider = new (require('models/UserProvider'))(seq)
-
-exports.logout = (req, res)->
-  req.session = {user: null}
-  res.render 'index', {title: 'welcome', user: null}
-
-
-exports.login = (req, res)->
-  req.session = {user: null}
-  userProvider.authenticate req.body.email, req.body.password, (error, u)->
-    if error
-      req.flash 'error', error
-      res.render 'index', {title: 'welcome', user: null}
-    else if u
-      req.session = {user: u}
-      res.render 'index', {title: 'welcome', user: req.session.user}
 
 register_params_validate = (req, res, callback)->
   ret = false
@@ -31,24 +13,48 @@ register_params_validate = (req, res, callback)->
     ret = true
   callback ret
 
-exports.register = (req, res)->
-  req.session = {user: null}
-  register_params_validate req, res, (ret)->
-    if ret
-      res.render 'index_reg', {title: 'welcome', user: null}
-    else 
-      userProvider.addUser req.body.email, req.body.password, req.body.name, (error, u)->
-        if error
-          req.flash 'error', error
-          res.render 'index_reg', {title: 'welcome', user: null}
-        else if u
-          req.session = {user: u}
-          res.render 'index', {title: 'welcome', user: req.session.user}
+app.namespace '/user', ()->
 
-exports.register_redirect = (req, res)->
-  # session keeping
-  if req.session and req.session.user
-    res.render 'index', {title: 'welcome', user: req.session.user}
-  else
+  app.get '/', (req, res)->
+    res.render 'user', {title: 'welcome', user: req.session.user}
+
+  app.post '/login', (req, res)->
     req.session = {user: null}
-    res.render 'index_reg', {title: 'welcome registeration'}
+    userProvider.authenticate req.body.email, req.body.password, (error, u)->
+      if error
+        req.flash 'error', error
+        res.render 'index', {title: 'welcome', user: null}
+      else if u
+        req.session = {user: u}
+        res.render 'user', {title: 'welcome', user: req.session.user}
+
+  app.get '/logout', (req, res)->
+    req.session = {user: null}
+    res.redirect '/'
+
+  app.post '/register', (req, res)->
+    req.session = {user: null}
+    register_params_validate req, res, (ret)->
+      if ret
+        res.render 'index_reg', {title: 'welcome', user: null}
+      else
+        userProvider.findUserByEmail req.body.email, (error, u)->
+          if u
+            req.flash 'error', 'Email Aready Taken'
+            res.render 'index_reg', {title: 'welcome', user: null}
+          else 
+            userProvider.addUser req.body.email, req.body.password, req.body.name, (error, u)->
+              if error
+                req.flash 'error', error
+                res.render 'index_reg', {title: 'welcome', user: null}
+              else if u
+                req.session = {user: u}
+                res.render 'user', {title: 'welcome', user: req.session.user}
+
+  app.get 'register_redirect', (req, res)->
+    # session keeping
+    if req.session and req.session.user
+      res.render 'user', {title: 'welcome', user: req.session.user}
+    else
+      req.session = {user: null}
+      res.render 'index_reg', {title: 'welcome registeration'}

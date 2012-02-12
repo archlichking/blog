@@ -1,0 +1,8 @@
+- each article in articles
+  div.article
+    a(href="/blog/" + article.id)!= article.title
+    div.article_body= article.body
+    div.article_create_at= article.createdAt
+    - each comment in article.comments
+      div.comment_body= comment.body
+      div.comment_owner = comment.id

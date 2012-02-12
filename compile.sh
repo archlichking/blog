@@ -1,4 +1,4 @@
 coffee -c *.coffee
 coffee -c routes/*.coffee
-coffee -c model/dummy/*.coffee
-coffee -c model/*.coffee
+coffee -c models/dummy/*.coffee
+coffee -c models/*.coffee

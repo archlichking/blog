@@ -1,8 +1,4 @@
-seq = new (require('sequelize'))('blog', 'root', '', {host: 'localhost', port: '3306'})
-# module
-userProvider = new (require('models/UserProvider'))(seq)
-
-exports.index = (req, res)->
+app.get '/', (req, res)->
   # init req.session.user to null anyway
   if req.session and req.session.user
     req.flash 'info', ''

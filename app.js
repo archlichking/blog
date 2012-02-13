@@ -45,10 +45,13 @@
   });
   app.get('/', function(req, res) {
     console.log(req.session);
-    req.flash('info', '');
-    return res.render('index', {
-      title: 'welcome',
-      user: null
+    return ArticleProvider.findArticlesByUserId('12', function(error, as) {
+      console.log(as);
+      return res.render('index', {
+        title: 'welcome',
+        user: null,
+        articles: as
+      });
     });
   });
   app.namespace('/user', function() {
@@ -62,14 +65,12 @@
       return UserProvider.authenticate(req.body.email, req.body.password, function(error, u) {
         if (error) {
           req.flash('error', error);
-          console.log(error);
           return res.render('index', {
             title: 'welcome',
             user: null
           });
         } else if (u) {
           req.session.user = u;
-          console.log(req.session);
           return res.render('user', {
             title: 'welcome',
             user: req.session.user

@@ -42,8 +42,9 @@ app.configure 'production', ()->
 app.get '/', (req, res)->
   # init req.session.user to null anyway
   console.log req.session
-  req.flash 'info', ''
-  res.render 'index', {title: 'welcome', user: null}
+  ArticleProvider.findArticlesByUserId '12', (error, as)->
+    console.log as
+    res.render 'index', {title: 'welcome', user: null, articles: as}
 
 
 app.namespace '/user', ()->
@@ -57,7 +58,6 @@ app.namespace '/user', ()->
         res.render 'index', {title: 'welcome', user: null}
       else if u
         req.session.user = u
-        console.log req.session
         res.render 'user', {title: 'welcome', user: req.session.user}
         #res.redirect '/user'
    

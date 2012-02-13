@@ -1,0 +1,16 @@
+div.container
+  div.span-17.colborder
+    form(method='post', action='/blog/new')
+      fieldset
+        legend Add A New Blog
+        p
+          label title
+          br
+          input.span-12(type='text', name='blog_title')
+          br
+        p
+          label content
+          br
+          textarea.span-15(type='textarea', name='blog_body')
+        p
+          input(type='submit', value='add new')

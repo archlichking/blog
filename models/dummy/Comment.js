@@ -1,7 +1,10 @@
 (function() {
   var Comment, User;
+
   User = require('./User');
+
   Comment = (function() {
+
     function Comment() {
       this.dummy_data = [
         {
@@ -22,6 +25,7 @@
       ];
       this.user = new User();
     }
+
     Comment.prototype.findCommentsByArticleId = function(a_id, callback) {
       var d, ret, _i, _len, _ref;
       console.log("invoking findCommentsByArticleId with a_id=" + a_id);
@@ -38,10 +42,15 @@
       }
       return callback(null, ret);
     };
+
     Comment.prototype.findCommentsByOwnerId = function(o_id, callback) {
       return console.log("invoking findCommentsByOwnerId with o_id=" + o_id);
     };
+
     return Comment;
+
   })();
+
   module.exports = Comment;
+
 }).call(this);

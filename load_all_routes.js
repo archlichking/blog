@@ -1,7 +1,10 @@
 (function() {
   var fs, vm;
+
   vm = require('vm');
+
   fs = require('fs');
+
   module.exports = function(app, context) {
     var dir;
     dir = __dirname + '/routes';
@@ -18,4 +21,5 @@
       }
     });
   };
+
 }).call(this);

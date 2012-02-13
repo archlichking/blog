@@ -42,7 +42,7 @@ app.configure 'production', ()->
 app.get '/', (req, res)->
   # init req.session.user to null anyway
   console.log req.session
-  ArticleProvider.findArticlesByUserId '12', (error, as)->
+  ArticleProvider.findArticlesByUserId '4', (error, as)->
     console.log as
     res.render 'index', {title: 'welcome', user: null, articles: as}
 
@@ -55,7 +55,8 @@ app.namespace '/user', ()->
     UserProvider.authenticate req.body.email, req.body.password, (error, u)->
       if error
         req.flash 'error', error
-        res.render 'index', {title: 'welcome', user: null}
+        #res.render 'index', {title: 'welcome', user: null}
+        res.redirect '/'
       else if u
         req.session.user = u
         res.render 'user', {title: 'welcome', user: req.session.user}
@@ -99,7 +100,21 @@ app.namespace '/blog', ()->
       if articles
         res.render 'blog.jade', {title: 'personal list', articles: articles}
 
+  app.get '/new', (req, res)->
+    res.render 'blog_new', {title: 'Add New Blog'}
 
+  app.post '/new', (req, res)->
+    ArticleProvider.addArticle req.body.blog_title, req.body.blog_body, '4', (error, article)->
+      if error
+        req.flash 'error', error
+        res.redirect '/blog/new'
+      else
+        req.flash 'info', req.body.title + ' saved successfully'
+        res.redirect '/blog/'+ article.id
+
+  app.get '/:id', (req, res)->
+    ArticleProvider.findArticleById req.params.id, (error, article)->
+      res.render 'blog_single', {title: 'Blog Saved', article: article}
 
 app.listen 3000
 

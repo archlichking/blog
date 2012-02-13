@@ -74,7 +74,7 @@ chainer1
   .add(a.setComments([c, c2]))
 
 chainer1
-  .runSerially()
+  .run()
   .on('success', ()->
       )
   .on('error', ()->

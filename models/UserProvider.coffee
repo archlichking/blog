@@ -21,11 +21,12 @@ class UserProvider
       callback null, u
 
   addUser: (email, password, name, callback)->
-    @userDao.build({name: name, email: email, password: @secure_with_salt(password, email)}).save().on('success', (u)->
-      if u
-        callback null, u
-      else
-        callback 'Registeration failed', null
+    @userDao.build({name: name, email: email, password: @secure_with_salt(password, email)}).save()
+      .on('success', (u)->
+        if u
+          callback null, u
+        else
+          callback 'Registeration failed', null
       ).on('error', (error)->
         callback 'internal error', null
       )

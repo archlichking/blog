@@ -1,14 +1,40 @@
-h1= title
-
-!= messages()
-
-form(method='post', action='/user/login')
-  label account
-  input(type='text', name='email')
-  p
-  label password
-  input(type='password', name='password')
-  p
-  input(type='submit', value='login')
-  
-a(href='/user/register_redirect') doesn't have an account?
+div.container
+  div.span-6.colborder
+    h1 lay's thinking
+  div.span-16.last
+    h1 nothing here now
+  hr
+  div.span-17.colborder
+    div.span-16
+      div.span-9 
+        h6 title1
+      div.span-3
+        h6.strong thunderzhulei
+      div.span-4.last
+        h6 2011-03-13 13:23:00
+      div.span-17
+        p Nullam mattis, odio ut tempus facilisis, metus nisl facilisis metus, auctor consectetuer felis ligula nec mauris. Vestibulum odio erat, fermentum at, commodo vitae, ultrices et, urna. Mauris vulputate, mi pulvinar sagittis condiment
+    hr
+    div.span-16.last
+      h6 title2
+      br
+      p Nullam mattis, odio ut tempus facilisis, metus nisl facilisis metus, auctor consectetuer felis ligula nec mauris. Vestibulum odio erat, fermentum at, commodo vitae, ultrices et, urna. Mauris vulputate, mi pulvinar sagittis condiment
+    
+  div.span-6.last
+    form(method='post', action='/user/login')
+      fieldset
+        legend login
+        != messages()
+        p
+          label(for='email') account
+          br
+          input#email.text.span-5(type='text', name='email')
+          br
+        p
+          label(for='password') password
+          br
+          input#password.text.span-5(type='password', name='password')
+          br
+        p
+          input(type='submit', value='login')
+          a(href='/user/register_redirect') no account?

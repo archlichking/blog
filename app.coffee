@@ -8,6 +8,7 @@ seq = new (require('sequelize'))('blog', 'root', '', {host: 'localhost', port: '
 # Module
 UserProvider = new (require('models/UserProvider'))(seq)
 ArticleProvider = new (require('models/ArticleProvider'))(seq)
+CommentProvider = new (require('models/CommentProvider'))(seq)
 
 # Models
 article = new (require('models/dummy/Article'))
@@ -42,8 +43,7 @@ app.configure 'production', ()->
 app.get '/', (req, res)->
   # init req.session.user to null anyway
   console.log req.session
-  ArticleProvider.findArticlesByUserId '4', (error, as)->
-    console.log as
+  ArticleProvider.findArticlesByUserId '12', (error, as)->
     res.render 'index', {title: 'welcome', user: null, articles: as}
 
 
@@ -104,7 +104,7 @@ app.namespace '/blog', ()->
     res.render 'blog_new', {title: 'Add New Blog'}
 
   app.post '/new', (req, res)->
-    ArticleProvider.addArticle req.body.blog_title, req.body.blog_body, '4', (error, article)->
+    ArticleProvider.addArticle req.body.blog_title, req.body.blog_body, '12', (error, article)->
       if error
         req.flash 'error', error
         res.redirect '/blog/new'
@@ -114,7 +114,8 @@ app.namespace '/blog', ()->
 
   app.get '/:id', (req, res)->
     ArticleProvider.findArticleById req.params.id, (error, article)->
-      res.render 'blog_single', {title: 'Blog Saved', article: article}
+      CommentProvider.findCommentsByArticleId article.id, (error, comments)->
+        res.render 'blog_single', {title: 'Single Blog', article: article, comments: comments}
 
 app.listen 3000
 

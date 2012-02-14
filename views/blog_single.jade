@@ -5,3 +5,28 @@ div.span-17.colborder
     h6= article.updatedAt.toGMTString()
   div.span-17
     p= article.body
+
+  hr
+
+  - each comment in comments
+    div.span-8
+      h5= comment.id
+    div.span-5.last
+      h5= comment.createdAt.toGMTString()
+    div.span-15
+      p= comment.body
+
+  form(method='post', action='')
+    fieldset
+      legend wanna comment?
+      //p
+      //  label email
+      //  br
+      //  input.span-10(type='text', name='comment_owner')
+      //  br
+      p
+        label comment
+        br
+        textarea.span-15(type='textarea', name='comment_body')
+      p
+        input(type='submit', value='comment')

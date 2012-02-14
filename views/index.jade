@@ -3,7 +3,7 @@ div.container
     - each article in articles
       div.span-16
         div.span-8 
-          h5= article.title
+          a(href='/blog/'+article.id)= article.title
         div.span-3
           h6.strong= article.USERId
         div.span-5.last

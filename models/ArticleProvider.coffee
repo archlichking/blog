@@ -10,6 +10,13 @@ class ArticleProvider
     @articleDao.findAll({where: {userid: u_id}, order: 'createdAt DESC', limit: 10}).on 'success', (as)->
       callback null, as 
 
+  findArticlesBriefByUserId: (u_id, callback)->
+    @articleDao.findAll({where: {userid: u_id}, order: 'createdAt DESC', limit: 10}).on 'success', (as)->
+      for a in as
+        if a.body.length > 300
+          a.body = a.body.substring(0, 297)+'...'
+      callback null, as 
+
   addArticle: (title, body, u_id, callback)->
     @articleDao.build({title:title, body:body, USERId:u_id}).save().on('success', (article)->
       if article

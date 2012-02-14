@@ -16,7 +16,7 @@ div.span-17.colborder
     div.span-15
       p= comment.body
 
-  form(method='post', action='')
+  form(method='post', action='/blog/comment')
     fieldset
       legend wanna comment?
       //p
@@ -27,6 +27,7 @@ div.span-17.colborder
       p
         label comment
         br
-        textarea.span-15(type='textarea', name='comment_body')
+        input.span-15(type='text', name='comment_body')
+        input(type='hidden', name='article_id', value=article.id)
       p
         input(type='submit', value='comment')

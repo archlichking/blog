@@ -43,7 +43,11 @@ app.configure 'production', ()->
 app.get '/', (req, res)->
   # init req.session.user to null anyway
   console.log req.session
-  ArticleProvider.findArticlesByUserId '12', (error, as)->
+  ArticleProvider.findArticlesBriefByUserId '4', (error, as)->
+    for article in as
+      CommentProvider.getCommentsNumberByArticleId article.id, (error, c)->
+        article.comment_amount = c
+    console.log as
     res.render 'index', {title: 'welcome', user: null, articles: as}
 
 
@@ -104,13 +108,21 @@ app.namespace '/blog', ()->
     res.render 'blog_new', {title: 'Add New Blog'}
 
   app.post '/new', (req, res)->
-    ArticleProvider.addArticle req.body.blog_title, req.body.blog_body, '12', (error, article)->
+    ArticleProvider.addArticle req.body.blog_title, req.body.blog_body, '4', (error, article)->
       if error
         req.flash 'error', error
         res.redirect '/blog/new'
       else
         req.flash 'info', req.body.title + ' saved successfully'
         res.redirect '/blog/'+ article.id
+  
+  app.post '/comment', (req, res)->
+    CommentProvider.addComment req.body.comment_body, req.body.article_id, (error, comment)->
+      if error
+        req.flash 'error', error
+      else
+        req.flash 'info', 'Comment Added'
+      res.redirect '/blog/' + req.body.article_id
 
   app.get '/:id', (req, res)->
     ArticleProvider.findArticleById req.params.id, (error, article)->

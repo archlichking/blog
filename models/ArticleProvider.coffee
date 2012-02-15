@@ -24,6 +24,17 @@ class ArticleProvider
           a.body = a.body.substring(0, 297)+'...'
       callback null, as 
 
+  findArticlesAllByPage: (start, end, callback)->
+    @articleDao.findAll({order: 'createdAt DESC', limit: end, offset: start}).on 'success', (articles)->
+      callback null, articles
+
+  countAll: (callback)->
+    @articleDao.count().on('success', (c)->
+      callback null, c
+    ).on('error', (error)->
+      callback error, null
+    )
+
   updateArticle: (id, title, body, callback)->
     @articleDao.find({where: {id:id}}).on('success', (a)->
       if a

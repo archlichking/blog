@@ -39,18 +39,18 @@ app.configure 'production', ()->
   app.use express.errorHandler()
 
 # Routers
-
-app.get '/', (req, res)->
-  # init req.session.user to null anyway
-  console.log req.session
-  ArticleProvider.findArticlesBriefAll (error, as)->
-    for article in as
-      CommentProvider.getCommentsNumberByArticleId article.id, (error, c)->
-        article.comment_amount = c
-    console.log as
-
-    res.render 'index', {title: 'welcome', user: null, articles: as}
-
+app.namespace '/', ()->
+  app.get '/', (req, res)->
+    # init req.session.user to null anyway
+    ArticleProvider.findArticlesAllByPage 0, 10,  (error, as)->
+      ArticleProvider.countAll (error, c)->
+        res.render 'index', {title: 'welcome', user: null, articles: as, page: 1, count: c}
+  
+  app.get '/p/:page', (req, res)->
+    # get particular page
+    ArticleProvider.findArticlesAllByPage 10*(parseInt(req.params.page)-1), 10*(parseInt(req.params.page)), (error, articles)->
+      ArticleProvider.countAll (error, c)->
+        res.render 'index', {title: 'welcome', user: null, articles: articles, page: req.params.page, count: c}
 
 app.namespace '/user', ()->
   app.get '/', (req, res)->
@@ -100,7 +100,7 @@ app.namespace '/user', ()->
 app.namespace '/blog', ()->
   app.get '/', (req, res)->
     console.log req.session
-    ArticleProvider.findArticlesBriefByUserId '14', (error, articles)->
+    ArticleProvider.findArticlesBriefByUserId '7', (error, articles)->
       if articles
         res.render 'blog', {title: 'personal list', articles: articles}
 

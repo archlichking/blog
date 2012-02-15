@@ -12,16 +12,13 @@ div.span-17.colborder
       div.span-4.prepend-14
         |<h5>[<a href="/blog/#{article.id}">read more</a>]
     hr
-  div.span-16
-    h6 title2
-    br
-    p. Nullam mattis, odio ut tempus facilisis, metus nisl facilisis metus, auctor consectetuer felis ligula nec mauris. Vestibulum odio erat, fermentum at, commodo vitae, ultrices et, urna. Mauris vulputate, mi pulvinar sagittis condiment
   
-  hr
   div.span-16.last 
     div.span-2.prepend-2
-      |<<<a href=''>new</a>
-    div.span-2.prepend-2.append-2
-      |<a href=''>articles_count</a>
+      if page > 1 
+        |<<<a href='/p/#{parseInt(page)-1}'>new</a>
+    div.span-4.prepend-2.append-2
+      | <h5>page <strong>#{page}</strong></h5>
     div.span-2.append-2
-      |<a href=''>old</a>>>
+      if count > 10*(parseInt(page)) 
+        |<a href='/p/#{parseInt(page)+1}'>old</a>>>

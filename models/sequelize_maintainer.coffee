@@ -62,14 +62,87 @@ a2 = Article.build {
   body: 'no shit'
 }
 
+a3 = Article.build {
+  title: 'welcome',
+  body: 'welcome everyone, here is first article'
+}
+a4 = Article.build {
+  title: 'welcome',
+  body: 'welcome everyone, here is first article'
+}
+a5 = Article.build {
+  title: 'welcome',
+  body: 'welcome everyone, here is first article'
+}
+a6 = Article.build {
+  title: 'welcome',
+  body: 'welcome everyone, here is first article'
+}
+a7 = Article.build {
+  title: 'welcome',
+  body: 'welcome everyone, here is first article'
+}
+a8 = Article.build {
+  title: 'welcome',
+  body: 'welcome everyone, here is first article'
+}
+a9 = Article.build {
+  title: 'welcome',
+  body: 'welcome everyone, here is first article'
+}
+a10 = Article.build {
+  title: 'welcome',
+  body: 'welcome everyone, here is first article'
+}
+a11 = Article.build {
+  title: 'welcome',
+  body: 'welcome everyone, here is first article'
+}
+a12 = Article.build {
+  title: 'welcome',
+  body: 'welcome everyone, here is first article'
+}
+a13 = Article.build {
+  title: 'welcome',
+  body: 'welcome everyone, here is first article'
+}
+a14 = Article.build {
+  title: 'welcome',
+  body: 'welcome everyone, here is first article'
+}
+
 chainer1
   .add(u.save())
   .add(u2.save())
   .add(a.save())
   .add(a2.save())
+  .add(a3.save())
+  .add(a4.save())
+  .add(a5.save())
+  .add(a6.save())
+  .add(a7.save())
+  .add(a8.save())
+  .add(a9.save())
+  .add(a10.save())
+  .add(a11.save())
+  .add(a12.save())
+  .add(a13.save())
+  .add(a14.save())
   .add(c.save())
   .add(c2.save())
   .add(u.setArticles([a]))
+  .add(u.setArticles([a3]))
+  .add(u.setArticles([a4]))
+  .add(u.setArticles([a5]))
+  .add(u.setArticles([a6]))
+  .add(u.setArticles([a7]))
+  .add(u.setArticles([a8]))
+  .add(u.setArticles([a9]))
+  .add(u.setArticles([a10]))
+  .add(u.setArticles([a11]))
+  .add(u.setArticles([a12]))
+  .add(u.setArticles([a13]))
+  .add(u.setArticles([a14]))
   .add(u2.setArticles([a2]))
   .add(a.setComments([c, c2]))
 

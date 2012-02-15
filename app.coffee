@@ -43,11 +43,12 @@ app.configure 'production', ()->
 app.get '/', (req, res)->
   # init req.session.user to null anyway
   console.log req.session
-  ArticleProvider.findArticlesBriefByUserId '4', (error, as)->
+  ArticleProvider.findArticlesBriefAll (error, as)->
     for article in as
       CommentProvider.getCommentsNumberByArticleId article.id, (error, c)->
         article.comment_amount = c
     console.log as
+
     res.render 'index', {title: 'welcome', user: null, articles: as}
 
 
@@ -99,16 +100,23 @@ app.namespace '/user', ()->
 app.namespace '/blog', ()->
   app.get '/', (req, res)->
     console.log req.session
-    u = req.session.user
-    ArticleProvider.findArticlesByUserId u.id, (error, articles)->
+    ArticleProvider.findArticlesBriefByUserId '14', (error, articles)->
       if articles
-        res.render 'blog.jade', {title: 'personal list', articles: articles}
+        res.render 'blog', {title: 'personal list', articles: articles}
+
+  app.get '/edit/:id', (req, res)->
+    ArticleProvider.findArticleById req.params.id, (error, article)->
+      res.render 'blog_edit', {title: 'Edit Blog', article: article}
+
+  app.post '/edit/:id', (req, res)->
+    ArticleProvider.updateArticle req.params.id, req.body.blog_title, req.body.blog_body, (error, article)->
+      res.redirect '/blog/' + req.params.id
 
   app.get '/new', (req, res)->
     res.render 'blog_new', {title: 'Add New Blog'}
 
   app.post '/new', (req, res)->
-    ArticleProvider.addArticle req.body.blog_title, req.body.blog_body, '4', (error, article)->
+    ArticleProvider.addArticle req.body.blog_title, req.body.blog_body, '12', (error, article)->
       if error
         req.flash 'error', error
         res.redirect '/blog/new'

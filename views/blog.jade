@@ -1,8 +1,14 @@
-- each article in articles
-  div.article
-    a(href="/blog/" + article.id)!= article.title
-    div.article_body= article.body
-    div.article_create_at= article.createdAt
-    - each comment in article.comments
-      div.comment_body= comment.body
-      div.comment_owner = comment.id
+div.span-17.colborder
+  - each article in articles
+    div.span-16
+      div.span-8 
+        h6= article.title
+      div.span-3
+        h6.strong= article.USERId
+      div.span-5.last
+        h6= article.updatedAt.toGMTString()
+      div.span-17
+        p= article.body
+      div.span-4.prepend-14
+        a(href='/blog/'+article.id) [read more]
+    hr

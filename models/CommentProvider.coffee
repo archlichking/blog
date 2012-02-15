@@ -12,10 +12,10 @@ class CommentProvider
 
   addComment: (body, a_id, callback)->
     @commentDao.build({body: body, ARTICLEId: a_id}).save().on('success', (comment)->
-      if comment
-        callback null, comment
-      else
-        callback 'Save Comment Failed', null
+        if comment
+          callback null, comment
+        else
+          callback 'Save Comment Failed', null
       ).on('error', (error)->
         callback 'internal error', error
       )

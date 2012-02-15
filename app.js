@@ -1,31 +1,19 @@
 (function() {
   var ArticleProvider, CommentProvider, MemoryStore, RedisStore, UserProvider, app, article, express, namespace, seq, stylus;
-
   express = require('express');
-
   express - (namespace = require('express-namespace'));
-
   stylus = require('stylus');
-
   RedisStore = require('connect-redis')(express);
-
   MemoryStore = require('connect').session.MemoryStore;
-
   seq = new (require('sequelize'))('blog', 'root', '', {
     host: 'localhost',
     port: '3306'
   });
-
   UserProvider = new (require('models/UserProvider'))(seq);
-
   ArticleProvider = new (require('models/ArticleProvider'))(seq);
-
   CommentProvider = new (require('models/CommentProvider'))(seq);
-
   article = new (require('models/dummy/Article'));
-
   app = module.exports = express.createServer();
-
   app.configure(function() {
     app.set('views', __dirname + '/views');
     app.set('view engine', 'jade');
@@ -46,7 +34,6 @@
       messages: require('express-messages')
     });
   });
-
   app.configure('development', function() {
     app.use(express.errorHandler({
       dumpExceptions: true,
@@ -54,14 +41,12 @@
     }));
     return app.use(express.logger(':remote-addr - - [:date] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"'));
   });
-
   app.configure('production', function() {
     return app.use(express.errorHandler());
   });
-
   app.get('/', function(req, res) {
     console.log(req.session);
-    return ArticleProvider.findArticlesBriefByUserId('4', function(error, as) {
+    return ArticleProvider.findArticlesBriefAll(function(error, as) {
       var article, _i, _len;
       for (_i = 0, _len = as.length; _i < _len; _i++) {
         article = as[_i];
@@ -77,7 +62,6 @@
       });
     });
   });
-
   app.namespace('/user', function() {
     app.get('/', function(req, res) {
       return res.render('user', {
@@ -152,19 +136,29 @@
       }
     });
   });
-
   app.namespace('/blog', function() {
     app.get('/', function(req, res) {
-      var u;
       console.log(req.session);
-      u = req.session.user;
-      return ArticleProvider.findArticlesByUserId(u.id, function(error, articles) {
+      return ArticleProvider.findArticlesBriefByUserId('14', function(error, articles) {
         if (articles) {
-          return res.render('blog.jade', {
+          return res.render('blog', {
             title: 'personal list',
             articles: articles
           });
         }
+      });
+    });
+    app.get('/edit/:id', function(req, res) {
+      return ArticleProvider.findArticleById(req.params.id, function(error, article) {
+        return res.render('blog_edit', {
+          title: 'Edit Blog',
+          article: article
+        });
+      });
+    });
+    app.post('/edit/:id', function(req, res) {
+      return ArticleProvider.updateArticle(req.params.id, req.body.blog_title, req.body.blog_body, function(error, article) {
+        return res.redirect('/blog/' + req.params.id);
       });
     });
     app.get('/new', function(req, res) {
@@ -173,7 +167,7 @@
       });
     });
     app.post('/new', function(req, res) {
-      return ArticleProvider.addArticle(req.body.blog_title, req.body.blog_body, '4', function(error, article) {
+      return ArticleProvider.addArticle(req.body.blog_title, req.body.blog_body, '12', function(error, article) {
         if (error) {
           req.flash('error', error);
           return res.redirect('/blog/new');
@@ -205,9 +199,6 @@
       });
     });
   });
-
   app.listen(3000);
-
   console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
-
 }).call(this);

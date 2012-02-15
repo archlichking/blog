@@ -1,6 +1,6 @@
 div.span-17.colborder
   div.span-12 
-    h5= article.title
+    |<h5>#{article.title} [<a href="/blog/edit/#{article.id}">edit</a>]
   div.span-5.last
     h6= article.updatedAt.toGMTString()
   div.span-17

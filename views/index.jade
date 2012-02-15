@@ -1,36 +1,27 @@
-div.container
-  div.span-17.colborder
-    - each article in articles
-      div.span-16
-        div.span-8 
-          a(href='/blog/'+article.id)= article.title
-        div.span-3
-          h6.strong= article.USERId
-        div.span-5.last
-          h6= article.updatedAt.toGMTString()
-        div.span-17
-          p= article.body
-      hr
-    div.span-16.last
-      h6 title2
-      br
-      p Nullam mattis, odio ut tempus facilisis, metus nisl facilisis metus, auctor consectetuer felis ligula nec mauris. Vestibulum odio erat, fermentum at, commodo vitae, ultrices et, urna. Mauris vulputate, mi pulvinar sagittis condiment
-    
-  div.span-6.last
-    form(method='post', action='/user/login')
-      fieldset
-        legend login
-        != messages()
-        p
-          label(for='email') account
-          br
-          input#email.text.span-5(type='text', name='email')
-          br
-        p
-          label(for='password') password
-          br
-          input#password.text.span-5(type='password', name='password')
-          br
-        p
-          input(type='submit', value='login')
-          a(href='/user/register_redirect') no account?
+div.span-17.colborder
+  - each article in articles
+    div.span-16
+      div.span-8 
+        h6= article.title
+      div.span-3
+        h6.strong= article.USERId
+      div.span-5.last
+        h6= article.updatedAt.toGMTString()
+      div.span-17
+        p= article.body
+      div.span-4.prepend-14
+        |<h5>[<a href="/blog/#{article.id}">read more</a>]
+    hr
+  div.span-16
+    h6 title2
+    br
+    p. Nullam mattis, odio ut tempus facilisis, metus nisl facilisis metus, auctor consectetuer felis ligula nec mauris. Vestibulum odio erat, fermentum at, commodo vitae, ultrices et, urna. Mauris vulputate, mi pulvinar sagittis condiment
+  
+  hr
+  div.span-16.last 
+    div.span-2.prepend-2
+      |<<<a href=''>new</a>
+    div.span-2.prepend-2.append-2
+      |<a href=''>articles_count</a>
+    div.span-2.append-2
+      |<a href=''>old</a>>>

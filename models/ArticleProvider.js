@@ -61,12 +61,17 @@
       });
     };
 
-    ArticleProvider.prototype.findArticlesAllByPage = function(start, end, callback) {
+    ArticleProvider.prototype.findArticlesBriefAllByPage = function(start, end, callback) {
       return this.articleDao.findAll({
         order: 'createdAt DESC',
         limit: end,
         offset: start
       }).on('success', function(articles) {
+        var a, _i, _len;
+        for (_i = 0, _len = articles.length; _i < _len; _i++) {
+          a = articles[_i];
+          if (a.body.length > 300) a.body = a.body.substring(0, 297) + '...';
+        }
         return callback(null, articles);
       });
     };

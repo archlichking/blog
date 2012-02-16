@@ -1,7 +1,24 @@
-div.user
-  div.username= user.name
-  div.status= user.status
-
-a(href='/user/logout') want to leave?
-p
-a(href='/blog') your blogs
+div.span-17.colborder
+  - each article in articles
+    div.span-16
+      div.span-8 
+        h6= article.title
+      div.span-3
+        h6.strong= article.USERId
+      div.span-5.last
+        h6= article.updatedAt.toGMTString()
+      div.span-17
+        p= article.body
+      div.span-4.prepend-14
+        |<h5>[<a href="/blog/#{article.id}">read more</a>]
+    hr
+  
+  div.span-16.last 
+    div.span-2.prepend-2
+      if page > 1 
+        |<<<a href='/p/#{parseInt(page)-1}'>new</a>
+    div.span-4.prepend-2.append-2
+      | <h5>page <strong>#{page}</strong> of <strong>#{parseInt(count/10)+1}</strong></h5>
+    div.span-2.append-2
+      if count > 10*(parseInt(page)) 
+        |<a href='/p/#{parseInt(page)+1}'>old</a>>>

@@ -38,38 +38,51 @@ app.configure 'development', ()->
 app.configure 'production', ()->
   app.use express.errorHandler()
 
+buildUser = (isAuth, email, name, id)->
+  if isAuth then {email: email, name: name, id: id} else null
+
 # Routers
 app.namespace '/', ()->
   app.get '/', (req, res)->
     # init req.session.user to null anyway
-    ArticleProvider.findArticlesAllByPage 0, 10,  (error, as)->
+    if not req.session || not req.session.isAuth
+      req.session.isAuth = false
+      req.session.user_email = null
+      req.session.user_name = null
+      req.session.user_id = null
+    ArticleProvider.findArticlesBriefAllByPage 0, 10,  (error, as)->
       ArticleProvider.countAll (error, c)->
-        res.render 'index', {title: 'welcome', user: null, articles: as, page: 1, count: c}
+        res.render 'index', {title: 'welcome', user: buildUser(req.session.isAuth, req.session.user_email, req.session.user_name, req.session.user_id), articles: as, page: 1, count: c}
   
   app.get '/p/:page', (req, res)->
     # get particular page
-    ArticleProvider.findArticlesAllByPage 10*(parseInt(req.params.page)-1), 10*(parseInt(req.params.page)), (error, articles)->
+    ArticleProvider.findArticlesBriefAllByPage 10*(parseInt(req.params.page)-1), 10*(parseInt(req.params.page)), (error, articles)->
       ArticleProvider.countAll (error, c)->
-        res.render 'index', {title: 'welcome', user: null, articles: articles, page: req.params.page, count: c}
+        res.render 'index', {title: 'welcome', user: buildUser(req.session.isAuth, req.session.user_email, req.session.user_name, req.session.user_id), articles: articles, page: req.params.page, count: c}
 
 app.namespace '/user', ()->
   app.get '/', (req, res)->
-    res.render 'user', {title: 'welcome', user: req.session.user}
+    console.log req.session
+    res.render 'user', {title: 'welcome', user: buildUser(req.session.isAuth, req.session.user_email, req.session.user_name, req.session.user_id)}
 
   app.post '/login', (req, res)->
     UserProvider.authenticate req.body.email, req.body.password, (error, u)->
       if error
         req.flash 'error', error
-        #res.render 'index', {title: 'welcome', user: null}
-        res.redirect '/'
       else if u
-        req.session.user = u
-        res.render 'user', {title: 'welcome', user: req.session.user}
-        #res.redirect '/user'
-   
-   app.get '/logout', (req, res)->
-      #req.session = {user: null}
+        # set session
+        req.session.isAuth = true
+        req.session.user_email = u.email
+        req.session.user_name = u.name
+        req.session.user_id = u.id
+        console.log req.session
+        #res.render 'user', {title: 'welcome', user: req.session.user}
       res.redirect '/'
+   
+  app.get '/logout', (req, res)->
+    # clear session
+    req.session.isAuth = false
+    res.redirect '/'
 
   app.post '/register', (req, res)->
       register_params_validate req, res, (ret)->
@@ -102,18 +115,18 @@ app.namespace '/blog', ()->
     console.log req.session
     ArticleProvider.findArticlesBriefByUserId '7', (error, articles)->
       if articles
-        res.render 'blog', {title: 'personal list', articles: articles}
+        res.render 'blog', {title: 'personal list', articles: articles, user: buildUser(req.session.isAuth, req.session.user_email, req.session.user_name, req.session.user_id)}
 
   app.get '/edit/:id', (req, res)->
     ArticleProvider.findArticleById req.params.id, (error, article)->
-      res.render 'blog_edit', {title: 'Edit Blog', article: article}
+      res.render 'blog_edit', {title: 'Edit Blog', article: article, user: buildUser(req.session.isAuth, req.session.user_email, req.session.user_name, req.session.user_id)}
 
   app.post '/edit/:id', (req, res)->
     ArticleProvider.updateArticle req.params.id, req.body.blog_title, req.body.blog_body, (error, article)->
       res.redirect '/blog/' + req.params.id
 
   app.get '/new', (req, res)->
-    res.render 'blog_new', {title: 'Add New Blog'}
+    res.render 'blog_new', {title: 'Add New Blog', user: buildUser(req.session.isAuth, req.session.user_email, req.session.user_name, req.session.user_id)}
 
   app.post '/new', (req, res)->
     ArticleProvider.addArticle req.body.blog_title, req.body.blog_body, '12', (error, article)->
@@ -135,7 +148,7 @@ app.namespace '/blog', ()->
   app.get '/:id', (req, res)->
     ArticleProvider.findArticleById req.params.id, (error, article)->
       CommentProvider.findCommentsByArticleId article.id, (error, comments)->
-        res.render 'blog_single', {title: 'Single Blog', article: article, comments: comments}
+        res.render 'blog_single', {title: 'Single Blog', article: article, comments: comments, user: buildUser(req.session.isAuth, req.session.user_email, req.session.user_name, req.session.user_id)}
 
 app.listen 3000
 

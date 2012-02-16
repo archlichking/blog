@@ -19,26 +19,30 @@ html
     hr
     div.container
       body!= body
-    
-      div.span-6.last
-        form(method='post', action='/user/login')
-          fieldset
-            legend login
-            != messages()
-            p
-              label(for='email') account
-              br
-              input#email.text.span-5(type='text', name='email')
-              br
-            p
-              label(for='password') password
-              br
-              input#password.text.span-5(type='password', name='password')
-              br
-            p
-              input(type='submit', value='login')
-              a(href='/user/register_redirect') no account?
-
+      if user == null
+        div.span-6.last
+          form(method='post', action='/user/login')
+            fieldset
+              legend login
+              != messages()
+              p
+                label(for='email') account
+                br
+                input#email.text.span-5(type='text', name='email')
+                br
+              p
+                label(for='password') password
+                br
+                input#password.text.span-5(type='password', name='password')
+                br
+              p
+                input(type='submit', value='login')
+                a(href='/user/register_redirect') no account?
+      else
+        div.span-6.last
+          p= user.name
+          p= user.email
+          p= user.id
     hr
     div.span-24.prepend-9.append-9.last
       h6 all right reserved @thunderzhulei.com

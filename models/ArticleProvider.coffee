@@ -24,8 +24,11 @@ class ArticleProvider
           a.body = a.body.substring(0, 297)+'...'
       callback null, as 
 
-  findArticlesAllByPage: (start, end, callback)->
+  findArticlesBriefAllByPage: (start, end, callback)->
     @articleDao.findAll({order: 'createdAt DESC', limit: end, offset: start}).on 'success', (articles)->
+      for a in articles
+        if a.body.length > 300
+          a.body = a.body.substring(0, 297)+'...'
       callback null, articles
 
   countAll: (callback)->

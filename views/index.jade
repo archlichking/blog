@@ -18,7 +18,7 @@ div.span-17.colborder
       if page > 1 
         |<<<a href='/p/#{parseInt(page)-1}'>new</a>
     div.span-4.prepend-2.append-2
-      | <h5>page <strong>#{page}</strong></h5>
+      | <h5>page <strong>#{page}</strong> of <strong>#{parseInt(count/10)+1}</strong></h5>
     div.span-2.append-2
       if count > 10*(parseInt(page)) 
         |<a href='/p/#{parseInt(page)+1}'>old</a>>>

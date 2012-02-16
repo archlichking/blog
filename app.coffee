@@ -42,6 +42,9 @@ buildUser = (isAuth, email, name, id)->
   if isAuth then {email: email, name: name, id: id} else null
 
 # Routers
+app.get '/bio', (req, res)->
+  res.render 'bio', {title: 'Biography', user: buildUser(req.session.isAuth, req.session.user_email, req.session.user_name, req.session.user_id)}
+
 app.namespace '/', ()->
   app.get '/', (req, res)->
     # init req.session.user to null anyway

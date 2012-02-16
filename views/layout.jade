@@ -3,19 +3,20 @@ html
   head
     title= title
     link(rel='stylesheet', href='/stylesheets/blueprint/screen.css', type='text/css', media='screen, projection')
+    link(rel='stylesheet', href='/stylesheets/blueprint/fancy-type/screen.css', type='text/css', media='screen, projection')
 
   div.container
     div.span-6.colborder
-      h1 lay's thinking
+      h1.alt lay's thinking
     div.span-16.last
-      div.span-7
+      div.span-4
         h3 
-      div.span-3 
-        h3 Bios
-      div.span-3 
-        h3 Contact me
-      div.span-3.last 
-        h3 To be Con
+      div.span-4 
+        |<h2><a class='alt' href='/bio'>Biography</a></h2>
+      div.span-4 
+        |<h2><a class='alt' href='/contact'>Contact Lay</a></h2>
+      div.span-4.last 
+        |<h2><a class='alt' href=''>Next?</a></h2>
     hr
     div.container
       body!= body

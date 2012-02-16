@@ -1,20 +1,22 @@
 div.span-17.colborder
-  div.span-12 
-    |<h5>#{article.title} [<a href="/blog/edit/#{article.id}">edit</a>]
+  div.span-9
+    |<h5>#{article.title}
+  div.span-3
+    if user && article.USERId == user.id 
+      |[<a href="/blog/edit/#{article.id}">edit</a>]
   div.span-5.last
     h6= article.updatedAt.toGMTString()
   div.span-17
     p= article.body
 
   hr
-
   - each comment in comments
-    div.span-8
-      h5= comment.id
-    div.span-5.last
-      h5= comment.createdAt.toGMTString()
-    div.span-15
-      p= comment.body
+    div.span-17
+      div.span-6
+        |<h5>#{comment.id}@#{comment.createdAt.toGMTString()}</h5>
+      div.span-11.last
+        em= comment.body
+      hr
 
   form(method='post', action='/blog/comment')
     fieldset

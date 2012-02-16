@@ -71,6 +71,13 @@
     }
   };
 
+  app.get('/bio', function(req, res) {
+    return res.render('bio', {
+      title: 'Biography',
+      user: buildUser(req.session.isAuth, req.session.user_email, req.session.user_name, req.session.user_id)
+    });
+  });
+
   app.namespace('/', function() {
     app.get('/', function(req, res) {
       if (!req.session || !req.session.isAuth) {

@@ -1,31 +1,19 @@
 (function() {
   var ArticleProvider, CommentProvider, MemoryStore, RedisStore, UserProvider, app, article, buildUser, express, namespace, seq, stylus;
-
   express = require('express');
-
   express - (namespace = require('express-namespace'));
-
   stylus = require('stylus');
-
   RedisStore = require('connect-redis')(express);
-
   MemoryStore = require('connect').session.MemoryStore;
-
   seq = new (require('sequelize'))('blog', 'root', '', {
     host: 'localhost',
     port: '3306'
   });
-
   UserProvider = new (require('models/UserProvider'))(seq);
-
   ArticleProvider = new (require('models/ArticleProvider'))(seq);
-
   CommentProvider = new (require('models/CommentProvider'))(seq);
-
   article = new (require('models/dummy/Article'));
-
   app = module.exports = express.createServer();
-
   app.configure(function() {
     app.set('views', __dirname + '/views');
     app.set('view engine', 'jade');
@@ -39,14 +27,10 @@
     app.use(app.router);
     app.use(express - namespace);
     app.use(express.static(__dirname + '/public'));
-    app.use(stylus.middleware({
-      src: __dirname + '/public'
-    }));
     return app.dynamicHelpers({
       messages: require('express-messages')
     });
   });
-
   app.configure('development', function() {
     app.use(express.errorHandler({
       dumpExceptions: true,
@@ -54,11 +38,9 @@
     }));
     return app.use(express.logger(':remote-addr - - [:date] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"'));
   });
-
   app.configure('production', function() {
     return app.use(express.errorHandler());
   });
-
   buildUser = function(isAuth, email, name, id) {
     if (isAuth) {
       return {
@@ -70,14 +52,12 @@
       return null;
     }
   };
-
   app.get('/bio', function(req, res) {
     return res.render('bio', {
       title: 'Biography',
       user: buildUser(req.session.isAuth, req.session.user_email, req.session.user_name, req.session.user_id)
     });
   });
-
   app.namespace('/', function() {
     app.get('/', function(req, res) {
       if (!req.session || !req.session.isAuth) {
@@ -112,7 +92,6 @@
       });
     });
   });
-
   app.namespace('/user', function() {
     app.get('/', function(req, res) {
       console.log(req.session);
@@ -122,6 +101,7 @@
       });
     });
     app.post('/login', function(req, res) {
+      console.log(req.body.current_url);
       return UserProvider.authenticate(req.body.email, req.body.password, function(error, u) {
         if (error) {
           req.flash('error', error);
@@ -132,7 +112,7 @@
           req.session.user_id = u.id;
           console.log(req.session);
         }
-        return res.redirect('/');
+        return res.redirect(req.body.current_url);
       });
     });
     app.get('/logout', function(req, res) {
@@ -189,7 +169,6 @@
       }
     });
   });
-
   app.namespace('/blog', function() {
     app.get('/', function(req, res) {
       console.log(req.session);
@@ -246,6 +225,7 @@
     });
     return app.get('/:id', function(req, res) {
       return ArticleProvider.findArticleById(req.params.id, function(error, article) {
+        console.log(article.body);
         return CommentProvider.findCommentsByArticleId(article.id, function(error, comments) {
           return res.render('blog_single', {
             title: 'Single Blog',
@@ -257,9 +237,6 @@
       });
     });
   });
-
   app.listen(3000);
-
   console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
-
 }).call(this);

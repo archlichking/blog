@@ -1,0 +1,30 @@
+script(language='javascript')
+  $(document).ready(function(){
+    $("#current_url").val(document.location.href)
+  });
+if user == null
+  div.span-6.last
+    form(method='post', action='/user/login')
+      fieldset
+        legend login
+        != messages()
+        p
+          label(for='email') account
+          br
+          input#email.text.span-5(type='text', name='email')
+          br
+        p
+          label(for='password') password
+          br
+          input#password.text.span-5(type='password', name='password')
+          br
+        p
+          input#current_url(type='hidden', name='current_url')
+          input.span-2(type='submit', value='login')
+          a(href='/user/register_redirect') no account?
+else
+  div.span-6.last
+    p= user.name
+    p= user.email
+    p= user.id
+    a(href='/user/logout') leave?

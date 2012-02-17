@@ -10,7 +10,7 @@ div.span-17.colborder
       p
         label content
         br
-        textarea#blog_body.span-15(type='textarea', name='blog_body')= article.body
+        textarea#blog(type='textarea', name='blog_body')= article.body
         input#blog_id(type='hidden', value="#{article.id}")
       p
         input(type='submit', value='save')

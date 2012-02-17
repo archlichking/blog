@@ -7,7 +7,7 @@ div.span-17.colborder
   div.span-5.last
     h6= article.updatedAt.toGMTString()
   div.span-17
-    p= article.body
+    != article.body
 
   hr
   - each comment in comments
@@ -17,19 +17,27 @@ div.span-17.colborder
       div.span-11.last
         em= comment.body
       hr
+  script(language='javascript')
+    $(document).ready(function(){
+      $("#comment_trigger").click(function(){
+        $("#comment_form").slideToggle("slow");
+      });
+    });
 
-  form(method='post', action='/blog/comment')
+  h3#comment_trigger wanna comment?
+
+  form#comment_form.inline(method='post', action='/blog/comment', style='display: none')
     fieldset
-      legend wanna comment?
+      //legend wanna comment?
       //p
       //  label email
       //  br
       //  input.span-10(type='text', name='comment_owner')
       //  br
-      p
+      div.span-3
         label comment
-        br
-        input.span-15(type='text', name='comment_body')
+      div.span-10
+        input.span-10(type='text', name='comment_body')
         input(type='hidden', name='article_id', value=article.id)
-      p
+      div.span-3.last
         input(type='submit', value='comment')

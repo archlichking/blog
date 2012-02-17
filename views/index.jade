@@ -8,7 +8,7 @@ div.span-17.colborder
       div.span-5.last
         h6= article.updatedAt.toGMTString()
       div.span-17
-        p= article.body
+        != article.body
       div.span-4.prepend-14
         |<h5>[<a href="/blog/#{article.id}">read more</a>]
     hr

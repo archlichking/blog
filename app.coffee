@@ -5,18 +5,18 @@ RedisStore = require('connect-redis')(express)
 MemoryStore = require('connect').session.MemoryStore
 seq = new (require('sequelize'))('blog', 'root', '', {host: 'localhost', port: '3306'})
 
-# Module
+# ============Module
 UserProvider = new (require('models/UserProvider'))(seq)
 ArticleProvider = new (require('models/ArticleProvider'))(seq)
 CommentProvider = new (require('models/CommentProvider'))(seq)
 
-# Models
+# ============Models
 article = new (require('models/dummy/Article'))
 
-# Export Server
+# ============Export Server
 app = module.exports = express.createServer()
-# Configuration
 
+# ============Configuration
 app.configure ()->
   app.set 'views', __dirname + '/views'
   app.set 'view engine', 'jade'
@@ -28,7 +28,6 @@ app.configure ()->
   app.use app.router
   app.use express-namespace
   app.use express.static(__dirname + '/public')
-  app.use stylus.middleware({src:__dirname + '/public'})
   app.dynamicHelpers {messages: require('express-messages')}
 
 app.configure 'development', ()->
@@ -41,10 +40,12 @@ app.configure 'production', ()->
 buildUser = (isAuth, email, name, id)->
   if isAuth then {email: email, name: name, id: id} else null
 
-# Routers
+# ============Routers
+# basic pages
 app.get '/bio', (req, res)->
   res.render 'bio', {title: 'Biography', user: buildUser(req.session.isAuth, req.session.user_email, req.session.user_name, req.session.user_id)}
 
+# with namespace
 app.namespace '/', ()->
   app.get '/', (req, res)->
     # init req.session.user to null anyway
@@ -69,6 +70,7 @@ app.namespace '/user', ()->
     res.render 'user', {title: 'welcome', user: buildUser(req.session.isAuth, req.session.user_email, req.session.user_name, req.session.user_id)}
 
   app.post '/login', (req, res)->
+    console.log req.body.current_url
     UserProvider.authenticate req.body.email, req.body.password, (error, u)->
       if error
         req.flash 'error', error
@@ -80,7 +82,7 @@ app.namespace '/user', ()->
         req.session.user_id = u.id
         console.log req.session
         #res.render 'user', {title: 'welcome', user: req.session.user}
-      res.redirect '/'
+      res.redirect req.body.current_url
    
   app.get '/logout', (req, res)->
     # clear session
@@ -150,6 +152,7 @@ app.namespace '/blog', ()->
 
   app.get '/:id', (req, res)->
     ArticleProvider.findArticleById req.params.id, (error, article)->
+      console.log article.body
       CommentProvider.findCommentsByArticleId article.id, (error, comments)->
         res.render 'blog_single', {title: 'Single Blog', article: article, comments: comments, user: buildUser(req.session.isAuth, req.session.user_email, req.session.user_name, req.session.user_id)}
 

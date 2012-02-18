@@ -1,24 +1,26 @@
-div.span-17.colborder
-  - each article in articles
-    div.span-16
-      div.span-8 
-        h6= article.title
-      div.span-3
-        h6.strong= article.USERId
-      div.span-5.last
-        h6= article.updatedAt.toGMTString()
-      div.span-17
-        != article.body
-      div.span-4.prepend-14
-        |<h5>[<a href="/blog/#{article.id}">read more</a>]
-    hr
+div.lay-span-16.lay-page-bg.lay-corner-all.lay-not-last
+  div.lay-margin-top-1
+    - each article in articles
+      div.lay-span-15.lay-margin-left-2.lay-article
+        div.span-12.lay-margin-left-1
+          |<h6 class="lay-text-title">#{article.title}@#{article.updatedAt.toGMTString()}</h6>
+        div.span-14.lay-margin-left-2.lay-margin-top-1.lay-text-body
+          != article.body
+        div.span-4.prepend-12
+          |<h5>[<a href="/blog/#{article.id}">read more</a>]
+
+      hr.space
   
-  div.span-16.last 
-    div.span-2.prepend-2
-      if page > 1 
-        |<<<a href='/p/#{parseInt(page)-1}'>new</a>
-    div.span-4.prepend-2.append-2
-      | <h5>page <strong>#{page}</strong> of <strong>#{parseInt(count/10)+1}</strong></h5>
-    div.span-2.append-2
-      if count > 10*(parseInt(page)) 
-        |<a href='/p/#{parseInt(page)+1}'>old</a>>>
+// div.span-16.last 
+//    div.span-2.prepend-2
+//      if page > 1 
+//        div.ui-state-default.ui-corner-all(onclick='location.href="/p/#{parseInt(page)-1}";')
+//          span.ui-icon.ui-icon-circle-arrow-w
+//          //|<<<a href='/p/#{parseInt(page)-1}'>new</a>
+//    div.span-4.prepend-2.append-2
+//      | <h5>page <strong>#{page}</strong> of <strong>#{parseInt(count/10)+1}</strong></h5>
+//    div.span-2.append-2
+//      if count > 10*(parseInt(page))
+//        div.ui-state-default.ui-corner-all.ui-widget(role='link', onclick='location.href="/p/#{parseInt(page)+1}";')
+//         span.ui-icon.ui-icon-circle-arrow-e
+//         //|<a href='/p/#{parseInt(page)+1}'>old</a>>>

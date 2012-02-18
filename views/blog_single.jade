@@ -1,43 +1,65 @@
-div.span-17.colborder
-  div.span-9
-    |<h5>#{article.title}
-  div.span-3
-    if user && article.USERId == user.id 
-      |[<a href="/blog/edit/#{article.id}">edit</a>]
-  div.span-5.last
-    h6= article.updatedAt.toGMTString()
-  div.span-17
-    != article.body
+div.lay-span-16.lay-page-bg.lay-corner-all.lay-not-last
+  div.lay-margin-top-1
+    div.lay-span-15.lay-margin-left-2.lay-article.lay-corner-all
+      div.span-12.lay-margin-left-1
+        |<h6 class="lay-text-title">#{article.title}@#{article.updatedAt.toGMTString()}</h6>
+        if user && article.USERId == user.id 
+          |[<a href="/blog/edit/#{article.id}">edit</a>]
+      div.span-14.lay-margin-left-2.lay-margin-top-1.lay-text-body
+        != article.body
 
-  hr
+
+  hr.space
+
+  div.lay-span-15.lay-margin-left-2
+    button#comment_trigger.ui-state-default.ui-corner-all(role='button')
+      |<span class="ui-icon ui-icon-newwin"></span>Wanna make some comment?
+
+  hr.space
+
   - each comment in comments
-    div.span-17
-      div.span-6
+    div.lay-span-15.lay-margin-left-2.lay-article.lay-corner-all
+      div.span-5.lay-margin-left-1
         |<h5>#{comment.id}@#{comment.createdAt.toGMTString()}</h5>
-      div.span-11.last
+      div.span-8.lay-text-body
         em= comment.body
-      hr
+    hr.space
+
   script(language='javascript')
     $(document).ready(function(){
       $("#comment_trigger").click(function(){
-        $("#comment_form").slideToggle("slow");
+        $("#comment_dialog").dialog({
+          autoOpen: true,
+          show: "blind",
+          resizable: false,
+          height: 100,
+          width: 450,
+        });
+        return false;
       });
     });
 
-  h3#comment_trigger wanna comment?
-
-  form#comment_form.inline(method='post', action='/blog/comment', style='display: none')
-    fieldset
-      //legend wanna comment?
-      //p
-      //  label email
-      //  br
-      //  input.span-10(type='text', name='comment_owner')
-      //  br
-      div.span-3
-        label comment
-      div.span-10
-        input.span-10(type='text', name='comment_body')
+div#comment_dialog(title='Make Some noise', style="display: none")
+  form(method='post', action='/blog/comment')
+    div
+      div.lay-common-not-last
+        label Comment
+      div.lay-common-not-last
+        input.lay-corner-all.lay-span-6(type='text', name='comment_body')
         input(type='hidden', name='article_id', value=article.id)
-      div.span-3.last
-        input(type='submit', value='comment')
+      div.lay-common-last
+        button#login_button.ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only(role='button')
+          span.ui-button-text to blog
+    
+  //div#comment_trigger.lay-span-15.lay-margin-left-2
+  //  |<h4><a href='#'>wanna comment?</a></h4>
+  //  form#comment_form.inline(method='post', action='/blog/comment')
+  //    fieldset
+  //      div.span-2
+  //        h4 comment
+  //      div.span-8
+  //        input.lay-corner-all.span-6(type='text', name='comment_body')
+  //        input(type='hidden', name='article_id', value=article.id)
+  //      div.span-3.last
+  //        button#login_button.ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only(role='button')
+  //          span.ui-button-text say it!

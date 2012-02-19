@@ -9,7 +9,7 @@
 .lay-header-ht {height:60px}
 
 
-.lay-header-button {height: 40px; width: 100px}
+.lay-header-button {height: 40px; width: 80px}
 
 
 .lay-not-last {padding-right:4px;margin-top:40px;margin-left:40px;margin-right:10px;border-right:1px;float:left}
@@ -69,6 +69,8 @@
 .lay-margin-left-4 {margin-left:40px;}
 
 .lay-margin-top-1 {margin-top:10px;}
+
+.lay-margin-right-1 {margin-right:10px;}
 
 .lay-text-title { font-family: Verdana,Arial,sans-serif; font-size: 1.3em; }
 .lay-text-body { font-family: Verdana,Arial,sans-serif; font-size: 1.0em; }

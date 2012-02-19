@@ -40,6 +40,17 @@ app.configure 'production', ()->
 buildUser = (isAuth, email, name, id)->
   if isAuth then {email: email, name: name, id: id} else null
 
+filtCircularObject = (objects, keys)->
+  ret = []
+  obj = {}
+  for object in objects
+    for key in keys
+      obj[key] = object[key]
+    ret.push obj
+    obj = {}
+
+  return ret
+
 # ============Routers
 # basic pages
 app.get '/bio', (req, res)->
@@ -56,13 +67,17 @@ app.namespace '/', ()->
       req.session.user_id = null
     ArticleProvider.findArticlesBriefAllByPage 0, 10,  (error, as)->
       ArticleProvider.countAll (error, c)->
-        res.render 'index', {title: 'welcome', user: buildUser(req.session.isAuth, req.session.user_email, req.session.user_name, req.session.user_id), articles: as, page: 1, count: c}
+        res.render 'index', {title: 'welcome', user: buildUser(req.session.isAuth, req.session.user_email, req.session.user_name, req.session.user_id), articles: as, next_page: 2, total_page: parseInt(c/10+1)}
   
   app.get '/p/:page', (req, res)->
     # get particular page
     ArticleProvider.findArticlesBriefAllByPage 10*(parseInt(req.params.page)-1), 10*(parseInt(req.params.page)), (error, articles)->
-      ArticleProvider.countAll (error, c)->
-        res.render 'index', {title: 'welcome', user: buildUser(req.session.isAuth, req.session.user_email, req.session.user_name, req.session.user_id), articles: articles, page: req.params.page, count: c}
+      filteredArticles = filtCircularObject articles, ['title', 'body', 'id', 'createdAt', 'updatedAt', 'USERId']
+      if articles.length != 0
+        res.json({articles: filteredArticles, next_page: parseInt(req.params.page)+1})
+      else
+        res.json({articles: null, next_page: req.params.page})
+
 
 app.namespace '/user', ()->
   app.get '/', (req, res)->

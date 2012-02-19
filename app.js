@@ -1,5 +1,5 @@
 (function() {
-  var ArticleProvider, CommentProvider, MemoryStore, RedisStore, UserProvider, app, article, buildUser, express, namespace, seq, stylus;
+  var ArticleProvider, CommentProvider, MemoryStore, RedisStore, UserProvider, app, article, buildUser, express, filtCircularObject, namespace, seq, stylus;
 
   express = require('express');
 
@@ -68,6 +68,22 @@
     }
   };
 
+  filtCircularObject = function(objects, keys) {
+    var key, obj, object, ret, _i, _j, _len, _len2;
+    ret = [];
+    obj = {};
+    for (_i = 0, _len = objects.length; _i < _len; _i++) {
+      object = objects[_i];
+      for (_j = 0, _len2 = keys.length; _j < _len2; _j++) {
+        key = keys[_j];
+        obj[key] = object[key];
+      }
+      ret.push(obj);
+      obj = {};
+    }
+    return ret;
+  };
+
   app.get('/bio', function(req, res) {
     return res.render('bio', {
       title: 'Biography',
@@ -89,23 +105,28 @@
             title: 'welcome',
             user: buildUser(req.session.isAuth, req.session.user_email, req.session.user_name, req.session.user_id),
             articles: as,
-            page: 1,
-            count: c
+            next_page: 2,
+            total_page: parseInt(c / 10 + 1)
           });
         });
       });
     });
     return app.get('/p/:page', function(req, res) {
       return ArticleProvider.findArticlesBriefAllByPage(10 * (parseInt(req.params.page) - 1), 10 * (parseInt(req.params.page)), function(error, articles) {
-        return ArticleProvider.countAll(function(error, c) {
-          return res.render('index', {
-            title: 'welcome',
-            user: buildUser(req.session.isAuth, req.session.user_email, req.session.user_name, req.session.user_id),
-            articles: articles,
-            page: req.params.page,
-            count: c
+        var filteredArticles;
+        filteredArticles = filtCircularObject(articles, ['title', 'body', 'id', 'createdAt', 'updatedAt', 'USERId']);
+        console.log(filteredArticles, parseInt(req.params.page) + 1);
+        if (articles.length !== 0) {
+          return res.json({
+            articles: filteredArticles,
+            next_page: parseInt(req.params.page) + 1
           });
-        });
+        } else {
+          return res.json({
+            articles: null,
+            next_page: req.params.page
+          });
+        }
       });
     });
   });

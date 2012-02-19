@@ -39,38 +39,31 @@ div#logout_confirm_dialog(title='need ya confirm', style="display: none")
   |<p><span class='ui-icon ui-icon-alert' style="float:left; margin:0 7px 20px 0;"></span>sure ya wanna leave?</p>
 
 div.lay-span-6.lay-page-bg.lay-side-ht.lay-corner-all.lay-last
-  div.lay-margin-top-1
+  div.lay-margin-top-1.lay-margin-left-1.lay-margin-right-1.lay-corner-all.lay-article
     if user == null
-      div.ui-widget.ui-helper-clearfix.span-6
+      div.lay-margin-left-1
         form.lay-form(method='post', action='/user/login')
-          fieldset
-            legend login
-            != messages()
-            p
               label(for='email') account
               br
-              input#email.text.lay-corner-all.span-5(type='text', name='email')
+              input#email.lay-corner-all(type='text', name='email', size='30')
               br
-            p
               label(for='password') password
               br
-              input#password.text.lay-corner-all.span-5(type='password', name='password')
-              br
-            p
+              input#password.lay-corner-all(type='password', name='password', size='30')
               input#current_url(type='hidden', name='current_url')
               //input.span-2(type='submit', value='login')
+              br
               button#login_button.ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only(role='button')
                 span.ui-button-text login
-              a(href='/user/register_redirect') no account?
+              //a(href='/user/register_redirect') no account?
     else
-      div.span-6
+      div.lay-margin-left-1
         p= user.name
         p= user.email
         p= user.id
         a#logout(href='javascript:void(0)') leave?
 
-  div#category_nav.ui-accordion.ui-widget.ui-helper-reset.ui-accordion-icons.span-6.last(role='tablist')
-    |<h4><a href='#'>java</a></h4>
-    p hibernate1
-    |<h4><a href='#'>javascript</a></h4>
-    p jquery
+  hr.space
+
+  div.lay-margin-top-1.lay-margin-left-1.lay-margin-right-1.lay-corner-all.lay-article
+    h4 asdfsfdasdf

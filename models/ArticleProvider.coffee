@@ -18,14 +18,14 @@ class ArticleProvider
       callback null, as 
 
   findArticlesBriefAll: (callback)->
-    @articleDao.findAll({ order: 'createdAt DESC', limit: 10}).on 'success', (as)->
+    @articleDao.findAll({ order: 'id DESC', limit: 10}).on 'success', (as)->
       for a in as
         if a.body.length > 300
           a.body = a.body.substring(0, 297)+'...'
       callback null, as 
 
-  findArticlesBriefAllByPage: (start, end, callback)->
-    @articleDao.findAll({order: 'createdAt DESC', limit: end, offset: start}).on 'success', (articles)->
+  findArticlesBriefAllByPage: (start, amount, callback)->
+    @articleDao.findAll({order: 'id DESC', limit: amount, offset: start}).on 'success', (articles)->
       for a in articles
         if a.body.length > 300
           a.body = a.body.substring(0, 297)+'...'

@@ -15,8 +15,8 @@
 .lay-not-last {padding-right:4px;margin-top:40px;margin-left:40px;margin-right:10px;border-right:1px;float:left}
 .lay-last {margin-right:40px;margin-top:40px;margin-bottom:40px}
 
-.lay-search-not-last {padding-right:4px;margin-top:20px;margin-left:40px;margin-right:10px;border-right:1px;float:left}
-.lay-search-last {margin-right:40px;margin-top:20px;margin-bottom:40px}
+.lay-search-not-last {padding-right:4px;margin-top:0px;margin-left:40px;margin-right:10px;border-right:1px;float:left;vertical-align:middle}
+.lay-search-last {margin-right:40px;margin-top:0px;margin-bottom:0px;vertical-align:middle}
 
 .lay-header-not-last {padding-right:4px;margin-top:0px;margin-left:40px;border-right:1px;float:left}
 .lay-header-last {margin-right:10px;margin-top:0px;margin-bottom:10px}
@@ -67,13 +67,23 @@
 .lay-margin-left-2 {margin-left:20px;}
 .lay-margin-left-3 {margin-left:30px;}
 .lay-margin-left-4 {margin-left:40px;}
+.lay-margin-left-50 {margin-left:500px;}
 
 .lay-margin-top-1 {margin-top:10px;}
 
 .lay-margin-right-1 {margin-right:10px;}
 
+.lay-margin-bottom-1 {margin-bottom:10px;}
+
+/* font */
+.lay-white {color:#FFFFFF;}
 .lay-text-title { font-family: Verdana,Arial,sans-serif; font-size: 1.3em; }
 .lay-text-body { font-family: Verdana,Arial,sans-serif; font-size: 1.0em; }
 
+/* input */
+.lay-input-text {margin: 0em 0em 0em 0em; padding: 0em 0em 0em 0em;}
+
 /* articles */
 .lay-article {background:#F5F4EE}
+
+

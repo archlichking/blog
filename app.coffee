@@ -40,6 +40,8 @@ app.configure 'production', ()->
 buildUser = (isAuth, email, name, id)->
   if isAuth then {email: email, name: name, id: id} else null
 
+ITEM_PER_PAGE = 10
+
 filtCircularObject = (objects, keys)->
   ret = []
   obj = {}
@@ -65,15 +67,15 @@ app.namespace '/', ()->
       req.session.user_email = null
       req.session.user_name = null
       req.session.user_id = null
-    ArticleProvider.findArticlesBriefAllByPage 0, 10,  (error, as)->
+    ArticleProvider.findArticlesBriefAllByPage 0, ITEM_PER_PAGE,  (error, as)->
       ArticleProvider.countAll (error, c)->
         res.render 'index', {title: 'welcome', user: buildUser(req.session.isAuth, req.session.user_email, req.session.user_name, req.session.user_id), articles: as, next_page: 2, total_page: parseInt(c/10+1)}
   
   app.get '/p/:page', (req, res)->
     # get particular page
-    ArticleProvider.findArticlesBriefAllByPage 10*(parseInt(req.params.page)-1), 10*(parseInt(req.params.page)), (error, articles)->
+    ArticleProvider.findArticlesBriefAllByPage 10*(parseInt(req.params.page)-1)+1, ITEM_PER_PAGE, (error, articles)->
       filteredArticles = filtCircularObject articles, ['title', 'body', 'id', 'createdAt', 'updatedAt', 'USERId']
-      if articles.length != 0
+      if article && articles.length != 0
         res.json({articles: filteredArticles, next_page: parseInt(req.params.page)+1})
       else
         res.json({articles: null, next_page: req.params.page})
@@ -157,19 +159,31 @@ app.namespace '/blog', ()->
         req.flash 'info', req.body.title + ' saved successfully'
         res.redirect '/blog/'+ article.id
   
-  app.post '/comment', (req, res)->
-    CommentProvider.addComment req.body.comment_body, req.body.article_id, (error, comment)->
+  app.get '/:id', (req, res)->
+    ArticleProvider.findArticleById req.params.id, (error, article)->
+      CommentProvider.findCommentsByArticleId 0, 10, article.id, (error, comments)->
+        console.log comments
+        CommentProvider.countAllByArticleId req.params.id, (error, c)->
+          res.render 'blog_single', {title: 'Single Blog', article: article, comments: comments, next_page: 2, total_page: parseInt(c/10+1), user: buildUser(req.session.isAuth, req.session.user_email, req.session.user_name, req.session.user_id)}
+
+app.namespace '/comment', ()->
+  app.get '/:aid/p/:page', (req, res)->
+    CommentProvider.findCommentsByArticleId 10*(parseInt(req.params.page)-1)+1, ITEM_PER_PAGE, req.params.aid, (error, comments)->
+      console.log req.params.page, req.params.aid
+      if comments.length != 0
+        filteredComments = filtCircularObject comments, ['id', 'body', 'createdAt', 'updatedAt', 'ARTICLEId']
+        res.json({comments: filteredComments, next_page: parseInt(req.params.page)+1})
+      else
+        res.json({comments: null, next_page: req.params.page})
+
+
+  app.post '/:aid', (req, res)->
+    CommentProvider.addComment req.body.comment_body, req.params.aid, (error, comment)->
       if error
         req.flash 'error', error
       else
         req.flash 'info', 'Comment Added'
-      res.redirect '/blog/' + req.body.article_id
-
-  app.get '/:id', (req, res)->
-    ArticleProvider.findArticleById req.params.id, (error, article)->
-      console.log article.body
-      CommentProvider.findCommentsByArticleId article.id, (error, comments)->
-        res.render 'blog_single', {title: 'Single Blog', article: article, comments: comments, user: buildUser(req.session.isAuth, req.session.user_email, req.session.user_name, req.session.user_id)}
+      res.redirect '/blog/' + req.params.aid
 
 app.listen 3000
 

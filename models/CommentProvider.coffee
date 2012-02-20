@@ -2,11 +2,11 @@ class CommentProvider
   constructor: (@seq)->
     @commentDao = @seq.import __dirname + '/template/comment_seq_template'
 
-  findCommentsByArticleId: (a_id, callback)->
-    @commentDao.findAll({where: {ARTICLEId: a_id}, order: 'createdAt DESC', limit: 10}).on 'success', (comments)->
+  findCommentsByArticleId: (start, amount, a_id, callback)->
+    @commentDao.findAll({where: {ARTICLEId: a_id}, order: 'id DESC', limit: amount, offset: start}).on 'success', (comments)->
       callback null, comments
 
-  getCommentsNumberByArticleId: (a_id, callback)->
+  countAllByArticleId: (a_id, callback)->
     @commentDao.count({where: {ARTICLEId:a_id}}).on 'success', (c)->
       callback null, c
 

@@ -1,79 +1,15 @@
-script(language='javascript')
-  $(document).ready(function(){
-    var isPageBottom = function(){
-      return $(document).scrollTop() + $(window).height() == $(document).height();
-    };
-
-    function loadArticlesToPage(new_articles){
-      var ret = "";
-      var template = "<div class='lay-span-15 lay-margin-left-2 lay-corner-all lay-article'>"
-        +"<div class='span-12 lay-margin-left-1'>"
-        +"<h6 class='lay-text-title'>##article_title##</h6>"
-        +"</div>"
-        +"<div class='span-14 lay-margin-left-2 lay-margin-top-1 lay-text-body'>"
-        +"##article_body##"
-        +"</div>"
-        +"<div class='span-4 prepend-12'>"
-        +"<h5>[<a href='/blog/##article_id##'>read more</a>]</h5>"
-        +"</div>"
-        +"</div>"
-        +"<hr class='space'></hr>";
-        
-      for(var i=0; i<new_articles.length;i++){
-        ret = ret.concat(template.replace("##article_title##", new_articles[i].title + "@" +new Date(new_articles[i].updatedAt).toGMTString())
-          .replace("##article_id##", new_articles[i].id)
-            .replace("##article_body##", new_articles[i].body)
-          );
-      }
-
-      return ret;
-    };
-
-
-    $(window).scroll(function(){
-      if(isPageBottom.call()){
-        // var response = loadArticlesFromServer();
-        if(parseInt($("#next_page").val()) < parseInt($("#total_page").val())+1){
-          $.blockUI({
-            message: $("#loading_img"),
-            css: {
-              width: '250px',
-              height: '36px',
-              '-webkit-border-top-left-radius': '5px',
-              '-webkit-border-top-right-radius': '5px',
-              '-webkit-border-bottom-left-radius': '5px',
-              '-webkit-border-bottom-right-radius': '5px'
-            }
-          });
-          $.get('/p/' + $("#next_page").val(), function(response){
-            $.unblockUI();
-            // only reload page if still articles left
-            // set #current_page to new value
-            $("#next_page").val(response.next_page);
-            // load another 10 articles (if any) when page is at bottom
-            $("#article_list").append(loadArticlesToPage(response.articles));
-          });
-        }
-      }
-    });
-
-  });
-
 div.lay-span-16.lay-page-bg.lay-corner-all.lay-not-last
   div#article_list.lay-margin-top-1
     input#next_page(type='hidden', value="#{next_page}")
     input#total_page(type='hidden', value="#{total_page}")
+    input#type_page(type='hidden', value='1')
     - each article in articles
       div.lay-span-15.lay-margin-left-2.lay-corner-all.lay-article
         div.span-12.lay-margin-left-1
-          |<h6 class="lay-text-title">#{article.title}@#{article.updatedAt.toGMTString()}</h6>
+          |<h6 class="lay-text-title">#{article.title}@#{article.updatedAt.toUTCString()}</h6>
         div.span-14.lay-margin-left-2.lay-margin-top-1.lay-text-body
           != article.body
         div.span-4.prepend-12
           |<h5>[<a href="/blog/#{article.id}">read more</a>]
 
       hr.space
-  
-  div#loading_img(style="display: none;width: '200px';height: '50px'")
-    img(src='/stylesheets/image/loading.gif', style="vertical-align: middle")
-    label loading more awesome articles

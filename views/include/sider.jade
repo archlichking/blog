@@ -43,19 +43,19 @@ div.lay-span-6.lay-page-bg.lay-side-ht.lay-corner-all.lay-last
     if user == null
       div.lay-margin-left-1
         form.lay-form(method='post', action='/user/login')
-              label(for='email') account
-              br
-              input#email.lay-corner-all(type='text', name='email', size='30')
-              br
-              label(for='password') password
-              br
-              input#password.lay-corner-all(type='password', name='password', size='30')
-              input#current_url(type='hidden', name='current_url')
-              //input.span-2(type='submit', value='login')
-              br
-              button#login_button.ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only(role='button')
-                span.ui-button-text login
-              //a(href='/user/register_redirect') no account?
+          label(for='email') account
+          br
+          input#email.lay-corner-all(type='text', name='email', size='30')
+          br
+          label(for='password') password
+          br
+          input#password.lay-corner-all(type='password', name='password', size='30')
+          input#current_url(type='hidden', name='current_url')
+          //input.span-2(type='submit', value='login')
+          br
+          button#login_button.ui-state-default.ui-corner-all(role='button')
+            |<span class='lay-span-2 ui-icon ui-icon-carat-1-w'></span>login
+          //a(href='/user/register_redirect') no account?
     else
       div.lay-margin-left-1
         p= user.name
@@ -66,4 +66,6 @@ div.lay-span-6.lay-page-bg.lay-side-ht.lay-corner-all.lay-last
   hr.space
 
   div.lay-margin-top-1.lay-margin-left-1.lay-margin-right-1.lay-corner-all.lay-article
-    h4 asdfsfdasdf
+    |<span id='201201' class='lay-span-4 ui-icon ui-icon-circlesmall-plus'></span> Jan, 2012
+    br
+    |<span id='201112'  class='lay-span-4 ui-icon ui-icon-circlesmall-plus'></span> Nov, 2011

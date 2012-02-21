@@ -3,4 +3,3 @@ routes/*.js
 models/dummy/*.js
 models/template/*.js
 models/*.js
-node_module/

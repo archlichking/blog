@@ -87,7 +87,6 @@ app.namespace '/user', ()->
     res.render 'user', {title: 'welcome', user: buildUser(req.session.isAuth, req.session.user_email, req.session.user_name, req.session.user_id)}
 
   app.post '/login', (req, res)->
-    console.log req.body.current_url
     UserProvider.authenticate req.body.email, req.body.password, (error, u)->
       if error
         req.flash 'error', error

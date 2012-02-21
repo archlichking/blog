@@ -83,7 +83,6 @@ app.namespace '/', ()->
 
 app.namespace '/user', ()->
   app.get '/', (req, res)->
-    console.log req.session
     res.render 'user', {title: 'welcome', user: buildUser(req.session.isAuth, req.session.user_email, req.session.user_name, req.session.user_id)}
 
   app.post '/login', (req, res)->

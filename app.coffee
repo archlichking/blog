@@ -135,7 +135,6 @@ app.namespace '/user', ()->
 app.namespace '/blog', ()->
   app.get '/search/:query/p/:page', (req, res)->
     ArticleProvider.findArticleByTitlePage req.params.query, 10*(parseInt(req.params.page)-1), ITEM_PER_PAGE, (error, articles)->
-      console.log articles
       if articles && articles.length !=0
         filteredArticles = filtCircularObject articles, ['title', 'body', 'id', 'createdAt', 'updatedAt', 'USERId']
         res.json({articles: filteredArticles, next_page: parseInt(req.params.page)+1})
@@ -143,7 +142,6 @@ app.namespace '/blog', ()->
         res.json({articles: null, next_page: req.params.page})
 
   app.post '/search', (req, res)->
-    console.log req.body.query, req.body.page
     ArticleProvider.findArticleByTitlePage req.body.query, 10*(parseInt(req.body.page)-1), ITEM_PER_PAGE, (error, articles)->
       ArticleProvider.countAllByTitle req.body.query, (error, c)->
         res.render 'blog/search', {title: 'search', query: req.body.query, articles: articles, next_page: parseInt(req.body.page)+1, total_page: parseInt(c/10+1), user: buildUser(req.session.isAuth, req.session.user_email, req.session.user_name, req.session.user_id)}

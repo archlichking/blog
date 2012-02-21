@@ -8,5 +8,7 @@
     , "jade": ">= 0.0.1"
     , "express-messages": ">=0.0.2"
     , "express-namespace": ">=0.0.4"
+    , "sequelize": ">=1.2.1"
+    , "connect-redis": ">=1.2.0"
   }
 }

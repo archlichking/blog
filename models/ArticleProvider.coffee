@@ -31,6 +31,24 @@ class ArticleProvider
           a.body = a.body.substring(0, 297)+'...'
       callback null, articles
 
+  findArticleByTime: (time, callback)->
+    @articleDao.findAll({where: "createdAt like '%"+time+"%' ", attributes: ['id', 'createdAt', 'title']}).on 'success', (articles)->
+      callback null, articles
+
+  findArticleByTitlePage: (title, start, amount, callback)->
+    @articleDao.findAll({where: "title like '%"+title+"%'", order: 'id DESC', limit: amount, offset: start}).on 'success', (articles)->
+      for a in articles
+        if a.body.length > 300
+          a.body = a.body.substring(0, 297)+'...'
+      callback null, articles
+
+  countAllByTitle: (title, callback)->
+    @articleDao.count({where: "title like '%"+title+"%'"}).on('success', (c)->
+      callback null, c
+    ).on('error', (error)->
+      callback error, null
+    )
+
   countAll: (callback)->
     @articleDao.count().on('success', (c)->
       callback null, c

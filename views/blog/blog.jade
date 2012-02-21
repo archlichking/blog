@@ -1,0 +1,14 @@
+div.span-17.colborder
+  - each article in articles
+    div.span-16
+      div.span-8 
+        h6= article.title
+      div.span-3
+        h6.strong= article.USERId
+      div.span-5.last
+        h6= article.updatedAt.toGMTString()
+      div.span-17
+        p= article.body
+      div.span-4.prepend-14
+        a(href='/blog/'+article.id) [read more]
+    hr

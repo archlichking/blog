@@ -1,0 +1,16 @@
+div.lay-span-16.lay-page-bg.lay-corner-all.lay-not-last
+  div#article_list.lay-margin-top-1
+    input#next_page(type='hidden', value="#{next_page}")
+    input#total_page(type='hidden', value="#{total_page}")
+    input#query_text(type='hidden', value="#{query}")
+    input#type_page(type='hidden', value='3')
+    - each article in articles
+      div.lay-span-15.lay-margin-left-2.lay-corner-all.lay-article
+        div.span-12.lay-margin-left-1
+          |<h6 class="lay-text-title">#{article.title}@#{article.updatedAt.toUTCString()}</h6>
+        div.span-14.lay-margin-left-2.lay-margin-top-1.lay-text-body
+          != article.body
+        div.span-4.prepend-12
+          |<h5>[<a href="/blog/#{article.id}">read more</a>]
+
+      hr.space

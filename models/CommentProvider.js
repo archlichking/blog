@@ -1,13 +1,10 @@
 (function() {
   var CommentProvider;
-
   CommentProvider = (function() {
-
     function CommentProvider(seq) {
       this.seq = seq;
       this.commentDao = this.seq["import"](__dirname + '/template/comment_seq_template');
     }
-
     CommentProvider.prototype.findCommentsByArticleId = function(start, amount, a_id, callback) {
       return this.commentDao.findAll({
         where: {
@@ -20,7 +17,6 @@
         return callback(null, comments);
       });
     };
-
     CommentProvider.prototype.countAllByArticleId = function(a_id, callback) {
       return this.commentDao.count({
         where: {
@@ -30,7 +26,6 @@
         return callback(null, c);
       });
     };
-
     CommentProvider.prototype.addComment = function(body, a_id, callback) {
       return this.commentDao.build({
         body: body,
@@ -45,11 +40,7 @@
         return callback('internal error', error);
       });
     };
-
     return CommentProvider;
-
   })();
-
   module.exports = CommentProvider;
-
 }).call(this);

@@ -38,6 +38,7 @@ script(language='javascript')
 div#logout_confirm_dialog(title='need ya confirm', style="display: none") 
   |<p><span class='ui-icon ui-icon-alert' style="float:left; margin:0 7px 20px 0;"></span>sure ya wanna leave?</p>
 
+
 div.lay-span-6.lay-page-bg.lay-side-ht.lay-corner-all.lay-last
   div.lay-margin-top-1.lay-margin-left-1.lay-margin-right-1.lay-corner-all.lay-article
     if user == null
@@ -66,6 +67,11 @@ div.lay-span-6.lay-page-bg.lay-side-ht.lay-corner-all.lay-last
   hr.space
 
   div.lay-margin-top-1.lay-margin-left-1.lay-margin-right-1.lay-corner-all.lay-article
-    |<span id='201201' class='lay-span-4 ui-icon ui-icon-circlesmall-plus'></span> Jan, 2012
-    br
-    |<span id='201112'  class='lay-span-4 ui-icon ui-icon-circlesmall-plus'></span> Nov, 2011
+    div.lay-margin-left-1
+      |<span class='lay-category lay-span-4 ui-icon ui-icon-circlesmall-plus'>2012-02</span> Feb, 2012
+      br
+      |<span class='lay-category lay-span-4 ui-icon ui-icon-circlesmall-plus'>2012-01</span> Jan, 2012
+
+  div#article_category.lay-category.lay-margin-top-1.lay-margin-bottom-1.lay-margin-left-1.lay-margin-right-1.lay-corner-all.lay-article
+
+  a#to_top.lay-to-top.lay-margin-left-to-top(href='#top') back to top

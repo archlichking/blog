@@ -1,5 +1,4 @@
 (function() {
-
   app.get('/', function(req, res) {
     if (req.session && req.session.user) {
       req.flash('info', '');
@@ -18,5 +17,4 @@
       });
     }
   });
-
 }).call(this);

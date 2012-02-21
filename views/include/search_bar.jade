@@ -2,9 +2,11 @@ div.lay-span-24.lay-search-bg.lay-search-ht
   div.lay-span-16.lay-search-ht.lay-search-not-last
     h6.lay-margin-left-50.lay-text-title.lay-white(style="margin-top: 17px") Search Blogs
   div.lay-span-6.lay-search-ht.lay-search-last
-    div.lay-span-3
-      input#search.lay-corner-left.lay-input-text(type='text', style="height:21px;verticla-align:bottom;margin-top:17px")
-    div.lay-span-2
-      button.ui-state-default.lay-corner-right(style='vertical-align:bottom;margin-top:17px;')
-        span.ui-icon.ui-icon-search
+    form(method='post', action='/blog/search')
+      div.lay-span-3
+        input#query.lay-corner-left.lay-input-text(name='query', type='text', style="height:21px;verticla-align:bottom;margin-top:17px")
+        input#page(name='page', type='hidden', value='1')
+      div.lay-span-2
+        button.ui-state-default.lay-corner-right(style='vertical-align:bottom;margin-top:17px;', role='button')
+          span.ui-icon.ui-icon-search
 

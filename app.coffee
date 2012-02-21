@@ -73,7 +73,7 @@ app.namespace '/', ()->
   
   app.get '/p/:page', (req, res)->
     # get particular page
-    ArticleProvider.findArticlesBriefAllByPage 10*(parseInt(req.params.page)-1)+1, ITEM_PER_PAGE, (error, articles)->
+    ArticleProvider.findArticlesBriefAllByPage 10*(parseInt(req.params.page)-1), ITEM_PER_PAGE, (error, articles)->
       filteredArticles = filtCircularObject articles, ['title', 'body', 'id', 'createdAt', 'updatedAt', 'USERId']
       if article && articles.length != 0
         res.json({articles: filteredArticles, next_page: parseInt(req.params.page)+1})
@@ -133,6 +133,21 @@ app.namespace '/user', ()->
       res.render 'index_reg', {title: 'welcome registeration'}
 
 app.namespace '/blog', ()->
+  app.get '/search/:query/p/:page', (req, res)->
+    ArticleProvider.findArticleByTitlePage req.params.query, 10*(parseInt(req.params.page)-1), ITEM_PER_PAGE, (error, articles)->
+      console.log articles
+      if articles && articles.length !=0
+        filteredArticles = filtCircularObject articles, ['title', 'body', 'id', 'createdAt', 'updatedAt', 'USERId']
+        res.json({articles: filteredArticles, next_page: parseInt(req.params.page)+1})
+      else
+        res.json({articles: null, next_page: req.params.page})
+
+  app.post '/search', (req, res)->
+    console.log req.body.query, req.body.page
+    ArticleProvider.findArticleByTitlePage req.body.query, 10*(parseInt(req.body.page)-1), ITEM_PER_PAGE, (error, articles)->
+      ArticleProvider.countAllByTitle req.body.query, (error, c)->
+        res.render 'blog/search', {title: 'search', query: req.body.query, articles: articles, next_page: parseInt(req.body.page)+1, total_page: parseInt(c/10+1), user: buildUser(req.session.isAuth, req.session.user_email, req.session.user_name, req.session.user_id)}
+
   app.get '/', (req, res)->
     console.log req.session
     ArticleProvider.findArticlesBriefByUserId '7', (error, articles)->
@@ -141,14 +156,14 @@ app.namespace '/blog', ()->
 
   app.get '/edit/:id', (req, res)->
     ArticleProvider.findArticleById req.params.id, (error, article)->
-      res.render 'blog_edit', {title: 'Edit Blog', article: article, user: buildUser(req.session.isAuth, req.session.user_email, req.session.user_name, req.session.user_id)}
+      res.render 'blog/edit', {title: 'Edit Blog', article: article, user: buildUser(req.session.isAuth, req.session.user_email, req.session.user_name, req.session.user_id)}
 
   app.post '/edit/:id', (req, res)->
     ArticleProvider.updateArticle req.params.id, req.body.blog_title, req.body.blog_body, (error, article)->
       res.redirect '/blog/' + req.params.id
 
   app.get '/new', (req, res)->
-    res.render 'blog_new', {title: 'Add New Blog', user: buildUser(req.session.isAuth, req.session.user_email, req.session.user_name, req.session.user_id)}
+    res.render 'blog/new', {title: 'Add New Blog', user: buildUser(req.session.isAuth, req.session.user_email, req.session.user_name, req.session.user_id)}
 
   app.post '/new', (req, res)->
     ArticleProvider.addArticle req.body.blog_title, req.body.blog_body, '12', (error, article)->
@@ -162,19 +177,17 @@ app.namespace '/blog', ()->
   app.get '/:id', (req, res)->
     ArticleProvider.findArticleById req.params.id, (error, article)->
       CommentProvider.findCommentsByArticleId 0, 10, article.id, (error, comments)->
-        console.log comments
         CommentProvider.countAllByArticleId req.params.id, (error, c)->
-          res.render 'blog_single', {title: 'Single Blog', article: article, comments: comments, next_page: 2, total_page: parseInt(c/10+1), user: buildUser(req.session.isAuth, req.session.user_email, req.session.user_name, req.session.user_id)}
+          res.render 'blog/single', {title: 'Single Blog', article: article, comments: comments, next_page: 2, total_page: parseInt(c/10+1), user: buildUser(req.session.isAuth, req.session.user_email, req.session.user_name, req.session.user_id)}
 
 app.namespace '/comment', ()->
   app.get '/:aid/p/:page', (req, res)->
-    CommentProvider.findCommentsByArticleId 10*(parseInt(req.params.page)-1)+1, ITEM_PER_PAGE, req.params.aid, (error, comments)->
-      console.log req.params.page, req.params.aid
+    CommentProvider.findCommentsByArticleId 10*(parseInt(req.params.page)-1), ITEM_PER_PAGE, req.params.aid, (error, comments)->
       if comments.length != 0
         filteredComments = filtCircularObject comments, ['id', 'body', 'createdAt', 'updatedAt', 'ARTICLEId']
-        res.json({comments: filteredComments, next_page: parseInt(req.params.page)+1})
+        res.json {comments: filteredComments, next_page: parseInt(req.params.page)+1}
       else
-        res.json({comments: null, next_page: req.params.page})
+        res.json {comments: null, next_page: req.params.page}
 
 
   app.post '/:aid', (req, res)->
@@ -184,6 +197,18 @@ app.namespace '/comment', ()->
       else
         req.flash 'info', 'Comment Added'
       res.redirect '/blog/' + req.params.aid
+
+app.namespace '/category', ()->
+  app.get '/:ctype/:time', (req, res)->
+    ArticleProvider.findArticleByTime req.params.time, (error, articles)->
+      if articles && articles.length != 0
+        filteredArticles = filtCircularObject articles, ['id', 'createdAt', 'title']
+        res.json {articles: filteredArticles}
+      else
+        res.json {articles: null}
+          
+
+
 
 app.listen 3000
 

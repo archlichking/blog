@@ -1,7 +1,7 @@
 .lay-body {background: #39424B}
 .lay-body-con {width:950px;margin:0 auto}
 .lay-page-bg {background: #FAFAFA}
-.lay-side-ht {height:800px}
+.lay-side-ht {height:650px}
 .lay-search-bg {background: #2C3033}
 .lay-search-ht {height:60px}
 .lay-search-wd {width: max}
@@ -67,6 +67,7 @@
 .lay-margin-left-2 {margin-left:20px;}
 .lay-margin-left-3 {margin-left:30px;}
 .lay-margin-left-4 {margin-left:40px;}
+.lay-margin-left-to-top {margin-left:184px;}
 .lay-margin-left-50 {margin-left:500px;}
 
 .lay-margin-top-1 {margin-top:10px;}
@@ -86,4 +87,6 @@
 /* articles */
 .lay-article {background:#F5F4EE}
 
-
+/* style compo */
+.lay-category {display: none; cursor:pointer}
+.lay-to-top { width: 46px; height: 34px; cursor:pointer; text-indent: -999em; outline: none; background:url(/stylesheets/image/toTop.png) no-repeat 0 0; position: fixed; bottom: 0; display: none }

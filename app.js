@@ -1,31 +1,19 @@
 (function() {
   var ArticleProvider, CommentProvider, ITEM_PER_PAGE, MemoryStore, RedisStore, UserProvider, app, article, buildUser, express, filtCircularObject, namespace, seq, stylus;
-
   express = require('express');
-
   express - (namespace = require('express-namespace'));
-
   stylus = require('stylus');
-
   RedisStore = require('connect-redis')(express);
-
   MemoryStore = require('connect').session.MemoryStore;
-
   seq = new (require('sequelize'))('blog', 'root', '', {
     host: 'localhost',
     port: '3306'
   });
-
   UserProvider = new (require('models/UserProvider'))(seq);
-
   ArticleProvider = new (require('models/ArticleProvider'))(seq);
-
   CommentProvider = new (require('models/CommentProvider'))(seq);
-
   article = new (require('models/dummy/Article'));
-
   app = module.exports = express.createServer();
-
   app.configure(function() {
     app.set('views', __dirname + '/views');
     app.set('view engine', 'jade');
@@ -43,7 +31,6 @@
       messages: require('express-messages')
     });
   });
-
   app.configure('development', function() {
     app.use(express.errorHandler({
       dumpExceptions: true,
@@ -51,11 +38,9 @@
     }));
     return app.use(express.logger(':remote-addr - - [:date] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"'));
   });
-
   app.configure('production', function() {
     return app.use(express.errorHandler());
   });
-
   buildUser = function(isAuth, email, name, id) {
     if (isAuth) {
       return {
@@ -67,9 +52,7 @@
       return null;
     }
   };
-
   ITEM_PER_PAGE = 10;
-
   filtCircularObject = function(objects, keys) {
     var key, obj, object, ret, _i, _j, _len, _len2;
     ret = [];
@@ -85,14 +68,12 @@
     }
     return ret;
   };
-
   app.get('/bio', function(req, res) {
     return res.render('bio', {
       title: 'Biography',
       user: buildUser(req.session.isAuth, req.session.user_email, req.session.user_name, req.session.user_id)
     });
   });
-
   app.namespace('/', function() {
     app.get('/', function(req, res) {
       if (!req.session || !req.session.isAuth) {
@@ -114,7 +95,7 @@
       });
     });
     return app.get('/p/:page', function(req, res) {
-      return ArticleProvider.findArticlesBriefAllByPage(10 * (parseInt(req.params.page) - 1) + 1, ITEM_PER_PAGE, function(error, articles) {
+      return ArticleProvider.findArticlesBriefAllByPage(10 * (parseInt(req.params.page) - 1), ITEM_PER_PAGE, function(error, articles) {
         var filteredArticles;
         filteredArticles = filtCircularObject(articles, ['title', 'body', 'id', 'createdAt', 'updatedAt', 'USERId']);
         if (article && articles.length !== 0) {
@@ -131,7 +112,6 @@
       });
     });
   });
-
   app.namespace('/user', function() {
     app.get('/', function(req, res) {
       console.log(req.session);
@@ -209,8 +189,40 @@
       }
     });
   });
-
   app.namespace('/blog', function() {
+    app.get('/search/:query/p/:page', function(req, res) {
+      return ArticleProvider.findArticleByTitlePage(req.params.query, 10 * (parseInt(req.params.page) - 1), ITEM_PER_PAGE, function(error, articles) {
+        var filteredArticles;
+        console.log(articles);
+        if (articles && articles.length !== 0) {
+          filteredArticles = filtCircularObject(articles, ['title', 'body', 'id', 'createdAt', 'updatedAt', 'USERId']);
+          return res.json({
+            articles: filteredArticles,
+            next_page: parseInt(req.params.page) + 1
+          });
+        } else {
+          return res.json({
+            articles: null,
+            next_page: req.params.page
+          });
+        }
+      });
+    });
+    app.post('/search', function(req, res) {
+      console.log(req.body.query, req.body.page);
+      return ArticleProvider.findArticleByTitlePage(req.body.query, 10 * (parseInt(req.body.page) - 1), ITEM_PER_PAGE, function(error, articles) {
+        return ArticleProvider.countAllByTitle(req.body.query, function(error, c) {
+          return res.render('blog/search', {
+            title: 'search',
+            query: req.body.query,
+            articles: articles,
+            next_page: parseInt(req.body.page) + 1,
+            total_page: parseInt(c / 10 + 1),
+            user: buildUser(req.session.isAuth, req.session.user_email, req.session.user_name, req.session.user_id)
+          });
+        });
+      });
+    });
     app.get('/', function(req, res) {
       console.log(req.session);
       return ArticleProvider.findArticlesBriefByUserId('7', function(error, articles) {
@@ -225,7 +237,7 @@
     });
     app.get('/edit/:id', function(req, res) {
       return ArticleProvider.findArticleById(req.params.id, function(error, article) {
-        return res.render('blog_edit', {
+        return res.render('blog/edit', {
           title: 'Edit Blog',
           article: article,
           user: buildUser(req.session.isAuth, req.session.user_email, req.session.user_name, req.session.user_id)
@@ -238,7 +250,7 @@
       });
     });
     app.get('/new', function(req, res) {
-      return res.render('blog_new', {
+      return res.render('blog/new', {
         title: 'Add New Blog',
         user: buildUser(req.session.isAuth, req.session.user_email, req.session.user_name, req.session.user_id)
       });
@@ -257,9 +269,8 @@
     return app.get('/:id', function(req, res) {
       return ArticleProvider.findArticleById(req.params.id, function(error, article) {
         return CommentProvider.findCommentsByArticleId(0, 10, article.id, function(error, comments) {
-          console.log(comments);
           return CommentProvider.countAllByArticleId(req.params.id, function(error, c) {
-            return res.render('blog_single', {
+            return res.render('blog/single', {
               title: 'Single Blog',
               article: article,
               comments: comments,
@@ -272,12 +283,10 @@
       });
     });
   });
-
   app.namespace('/comment', function() {
     app.get('/:aid/p/:page', function(req, res) {
-      return CommentProvider.findCommentsByArticleId(10 * (parseInt(req.params.page) - 1) + 1, ITEM_PER_PAGE, req.params.aid, function(error, comments) {
+      return CommentProvider.findCommentsByArticleId(10 * (parseInt(req.params.page) - 1), ITEM_PER_PAGE, req.params.aid, function(error, comments) {
         var filteredComments;
-        console.log(req.params.page, req.params.aid);
         if (comments.length !== 0) {
           filteredComments = filtCircularObject(comments, ['id', 'body', 'createdAt', 'updatedAt', 'ARTICLEId']);
           return res.json({
@@ -303,9 +312,23 @@
       });
     });
   });
-
+  app.namespace('/category', function() {
+    return app.get('/:ctype/:time', function(req, res) {
+      return ArticleProvider.findArticleByTime(req.params.time, function(error, articles) {
+        var filteredArticles;
+        if (articles && articles.length !== 0) {
+          filteredArticles = filtCircularObject(articles, ['id', 'createdAt', 'title']);
+          return res.json({
+            articles: filteredArticles
+          });
+        } else {
+          return res.json({
+            articles: null
+          });
+        }
+      });
+    });
+  });
   app.listen(3000);
-
   console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
-
 }).call(this);

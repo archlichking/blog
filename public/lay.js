@@ -15,13 +15,13 @@
     };
 
     var TEMPLATE_ARTICLE = "<div class='lay-span-15 lay-margin-left-2 lay-corner-all lay-article'>"
-      +"<div class='span-12 lay-margin-left-1'>"
+      +"<div class='lay-span-14 lay-margin-left-1'>"
       +"<h6 class='lay-text-title'>##article_title##</h6>"
       +"</div>"
-      +"<div class='span-14 lay-margin-left-2 lay-margin-top-1 lay-text-body'>"
+      +"<div class='lay-span-14 lay-margin-left-2 lay-margin-top-1 lay-text-body'>"
       +"##article_body##"
       +"</div>"
-      +"<div class='span-4 prepend-12'>"
+      +"<div class='lay-span-4 prepend-12'>"
       +"<h5>[<a href='/blog/##article_id##'>read more</a>]</h5>"
       +"</div>"
       +"</div>"

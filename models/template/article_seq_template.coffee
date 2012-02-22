@@ -1,5 +1,5 @@
 module.exports = (seq, DataTypes)->
-  seq.define 'ARTICLE', {
+  seq.define 'article', {
     title: DataTypes.STRING,
-    body: DataTypes.TEXT,
+    body: DataTypes.TEXT
   }

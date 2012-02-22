@@ -1,9 +1,8 @@
 (function() {
-
   module.exports = function(seq, DataTypes) {
-    return seq.define('COMMENT', {
-      body: DataTypes.STRING
+    return seq.define('comment', {
+      body: DataTypes.STRING,
+      email: DataTypes.STRING
     });
   };
-
 }).call(this);

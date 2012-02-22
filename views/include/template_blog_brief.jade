@@ -1,0 +1,25 @@
+script(language='javascript')
+  $(document).ready(function(){
+    $(".show-more-option").hover(
+      function(){
+        $(this).next(".more-option").show()
+      }, 
+      function(){
+        $(this).next(".more-option").hide()
+    });
+  });
+- each article in articles
+      div.lay-span-15.lay-margin-left-2.lay-corner-all.lay-article
+        div.lay-span-14.lay-margin-left-1
+          |<h6 class="lay-text-title">#{article.title}@#{article.updatedAt.toUTCString()}</h6>
+        div.lay-span-14.lay-margin-left-2.lay-margin-top-1.lay-margin-bottom-1.lay-text-body
+          != article.body
+        div.lay-span-14.lay-margin-left-1
+          div.lay-span-6.lay-margin-left-1
+            div
+              span.show-more-option.lay-span-4.ui-icon.ui-icon-extlink(style='cursor: pointer')
+              div.more-option(style='display:none') read: 2|comment: 3|tag: 5
+          div.lay-span-6.lay-margin-right-1
+            |<h5>[<a href="/blog/#{article.id}">read more</a>]
+
+      hr.space

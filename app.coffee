@@ -202,8 +202,6 @@ app.namespace '/category', ()->
         res.json {articles: filteredArticles}
       else
         res.json {articles: null}
-          
-
 
 
 app.listen 3000

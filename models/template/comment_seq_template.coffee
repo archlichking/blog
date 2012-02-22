@@ -1,4 +1,5 @@
 module.exports = (seq, DataTypes)->
-  seq.define 'COMMENT', {
+  seq.define 'comment', {
     body: DataTypes.STRING
+    email: DataTypes.STRING
   }

@@ -1,31 +1,19 @@
 (function() {
   var ArticleProvider, CommentProvider, ITEM_PER_PAGE, MemoryStore, RedisStore, UserProvider, app, article, buildUser, express, filtCircularObject, namespace, seq, stylus;
-
   express = require('express');
-
   express - (namespace = require('express-namespace'));
-
   stylus = require('stylus');
-
   RedisStore = require('connect-redis')(express);
-
   MemoryStore = require('connect').session.MemoryStore;
-
   seq = new (require('sequelize'))('blog', 'root', '', {
     host: 'localhost',
     port: '3306'
   });
-
   UserProvider = new (require('models/UserProvider'))(seq);
-
   ArticleProvider = new (require('models/ArticleProvider'))(seq);
-
   CommentProvider = new (require('models/CommentProvider'))(seq);
-
   article = new (require('models/dummy/Article'));
-
   app = module.exports = express.createServer();
-
   app.configure(function() {
     app.set('views', __dirname + '/views');
     app.set('view engine', 'jade');
@@ -43,7 +31,6 @@
       messages: require('express-messages')
     });
   });
-
   app.configure('development', function() {
     app.use(express.errorHandler({
       dumpExceptions: true,
@@ -51,11 +38,9 @@
     }));
     return app.use(express.logger(':remote-addr - - [:date] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"'));
   });
-
   app.configure('production', function() {
     return app.use(express.errorHandler());
   });
-
   buildUser = function(isAuth, email, name, id) {
     if (isAuth) {
       return {
@@ -67,9 +52,7 @@
       return null;
     }
   };
-
   ITEM_PER_PAGE = 10;
-
   filtCircularObject = function(objects, keys) {
     var key, obj, object, ret, _i, _j, _len, _len2;
     ret = [];
@@ -85,14 +68,12 @@
     }
     return ret;
   };
-
   app.get('/bio', function(req, res) {
     return res.render('bio', {
       title: 'Biography',
       user: buildUser(req.session.isAuth, req.session.user_email, req.session.user_name, req.session.user_id)
     });
   });
-
   app.namespace('/', function() {
     app.get('/', function(req, res) {
       if (!req.session || !req.session.isAuth) {
@@ -131,7 +112,6 @@
       });
     });
   });
-
   app.namespace('/user', function() {
     app.get('/', function(req, res) {
       return res.render('user', {
@@ -207,7 +187,6 @@
       }
     });
   });
-
   app.namespace('/blog', function() {
     app.get('/search/:query/p/:page', function(req, res) {
       return ArticleProvider.findArticleByTitlePage(req.params.query, 10 * (parseInt(req.params.page) - 1), ITEM_PER_PAGE, function(error, articles) {
@@ -300,7 +279,6 @@
       });
     });
   });
-
   app.namespace('/comment', function() {
     app.get('/:aid/p/:page', function(req, res) {
       return CommentProvider.findCommentsByArticleId(10 * (parseInt(req.params.page) - 1), ITEM_PER_PAGE, req.params.aid, function(error, comments) {
@@ -330,7 +308,6 @@
       });
     });
   });
-
   app.namespace('/category', function() {
     return app.get('/:ctype/:time', function(req, res) {
       return ArticleProvider.findArticleByTime(req.params.time, function(error, articles) {
@@ -348,9 +325,6 @@
       });
     });
   });
-
   app.listen(3000);
-
   console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
-
 }).call(this);

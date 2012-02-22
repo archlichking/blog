@@ -25,19 +25,17 @@ div.lay-span-16.lay-page-bg.lay-corner-all.lay-not-last
           em= comment.body
       hr.space
 
-  script(language='javascript')
-    $(document).ready(function(){
-      $("#comment_trigger").click(function(){
-        $("#comment_dialog").dialog({
-          autoOpen: true,
-          show: "blind",
-          resizable: false,
-          height: 100,
-          width: 450,
-        });
-        return false;
-      });
-    });
+    :coffeescript
+      $(document).ready ()->
+        $("#comment_trigger").click ()->
+          $("#comment_dialog").dialog {
+            autoOpen: true
+            show: "blind"
+            resizable: false
+            height: 100
+            width: 450
+          }
+          false
 
 div#comment_dialog(title='Make Some noise', style="display: none")
   form(method='post', action="/comment/#{article.id}")
@@ -53,16 +51,3 @@ div#comment_dialog(title='Make Some noise', style="display: none")
       div.lay-common-last
         button#login_button.ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only(role='button')
           span.ui-button-text to blog
-    
-  //div#comment_trigger.lay-span-15.lay-margin-left-2
-  //  |<h4><a href='#'>wanna comment?</a></h4>
-  //  form#comment_form.inline(method='post', action='/blog/comment')
-  //    fieldset
-  //      div.span-2
-  //        h4 comment
-  //      div.span-8
-  //        input.lay-corner-all.span-6(type='text', name='comment_body')
-  //        input(type='hidden', name='article_id', value=article.id)
-  //      div.span-3.last
-  //        button#login_button.ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only(role='button')
-  //          span.ui-button-text say it!

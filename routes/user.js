@@ -1,6 +1,5 @@
 (function() {
   var register_params_validate;
-
   register_params_validate = function(req, res, callback) {
     var ret;
     ret = false;
@@ -13,7 +12,6 @@
     }
     return callback(ret);
   };
-
   app.namespace('/user', function() {
     app.get('/', function(req, res) {
       return res.render('user', {
@@ -106,5 +104,4 @@
       }
     });
   });
-
 }).call(this);

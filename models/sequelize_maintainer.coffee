@@ -56,50 +56,74 @@ a2 = Article.build {
 a3 = Article.build {
   title: 'welcome'
   body: 'welcome everyone, here is first article'
+  readTimes: 12
+  commentTimes: 0
 }
 a4 = Article.build {
   title: 'welcome'
   body: 'welcome everyone, here is first article'
+  readTimes: 12
+  commentTimes: 0
 }
 a5 = Article.build {
   title: 'welcome'
   body: 'welcome everyone, here is first article'
+  readTimes: 12
+  commentTimes: 0
 }
 a6 = Article.build {
   title: 'welcome'
   body: 'welcome everyone, here is first article'
+  readTimes: 12
+  commentTimes: 0
 }
 a7 = Article.build {
   title: 'welcome'
   body: 'welcome everyone, here is first article'
+  readTimes: 12
+  commentTimes: 0
 }
 a8 = Article.build {
   title: 'welcome'
   body: 'welcome everyone, here is first article'
+  readTimes: 12
+  commentTimes: 0
 }
 a9 = Article.build {
   title: 'welcome'
   body: 'welcome everyone, here is first article'
+  readTimes: 12
+  commentTimes: 0
 }
 a10 = Article.build {
   title: 'welcome'
   body: 'welcome everyone, here is first article'
+  readTimes: 12
+  commentTimes: 0
 }
 a11 = Article.build {
   title: 'welcome'
   body: 'welcome everyone, here is first article'
+  readTimes: 12
+  commentTimes: 0
 }
 a12 = Article.build {
   title: 'welcome'
   body: 'welcome everyone, here is first article'
+  readTimes: 12
+  commentTimes: 0
 }
 a13 = Article.build {
   title: 'welcome'
   body: 'welcome everyone, here is first article'
+  readTimes: 12
+  commentTimes: 0
 }
 a14 = Article.build {
   title: 'welcome'
   body: 'welcome everyone, here is first article'
+  readTimes: 12
+  commentTimes: 0
 }
 
 ca1 = Category.build {
@@ -120,10 +144,8 @@ chainer
 
 chainer
   .runSerially()
-  .on('success', ()->
-      )
-  .on('error', ()->
-      )
+  .on('success', ()->{})
+  .on('error', ()->{})
 ///
 # insert data
 chainer1
@@ -164,7 +186,6 @@ chainer1
   .add(a.setComments([c, c2]))
   .add(ca1.setArticles([a, a3, a4, a6]))
   .add(ca2.setArticles([a5, a7, a8, a9]))
-
 chainer1
   .run()
   .on('success', ()->

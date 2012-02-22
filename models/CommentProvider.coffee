@@ -6,7 +6,7 @@ class CommentProvider
     @commentDao.findAll({where: {ARTICLEId: a_id}, order: 'id DESC', limit: amount, offset: start}).on 'success', (comments)->
       callback null, comments
 
-  countAllByArticleId: (a_id, callback)->
+  countAllByArticle: (a_id, callback)->
     @commentDao.count({where: {ARTICLEId:a_id}}).on 'success', (c)->
       callback null, c
 

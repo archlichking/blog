@@ -1,4 +1,5 @@
 (function() {
+
   module.exports = function(seq, DataTypes) {
     return seq.define('category', {
       name: {
@@ -7,4 +8,5 @@
       }
     });
   };
+
 }).call(this);

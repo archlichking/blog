@@ -3,10 +3,16 @@ script(language='javascript')
     $(".show-more-option").hover(
       function(){
         $(this).next(".more-option").show()
-      }, 
+      } 
+    );
+
+    $(".more-option").hover(
+      function(){},
       function(){
-        $(this).next(".more-option").hide()
-    });
+        $(this).hide()
+      }
+    );
+
   });
 - each article in articles
       div.lay-span-15.lay-margin-left-2.lay-corner-all.lay-article
@@ -16,9 +22,9 @@ script(language='javascript')
           != article.body
         div.lay-span-14.lay-margin-left-1
           div.lay-span-6.lay-margin-left-1
-            div
+            div(style='border: 1px')
               span.show-more-option.lay-span-4.ui-icon.ui-icon-extlink(style='cursor: pointer')
-              div.more-option(style='display:none') read: 2|comment: 3|tag: 5
+              div.more-option(style='display:none;cursor: pointer') read: 2|comment: 3|tag: 5
           div.lay-span-6.lay-margin-right-1
             |<h5>[<a href="/blog/#{article.id}">read more</a>]
 

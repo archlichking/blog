@@ -42,6 +42,9 @@ buildUser = (isAuth, email, name, id)->
 
 ITEM_PER_PAGE = 10
 
+ARTICLE_ATTR = ['title', 'body', 'id', 'createdAt', 'updatedAt', 'userId', 'commentTimes', 'readTimes']
+COMMENT_ATTR = ['id', 'body', 'createdAt', 'updatedAt', 'articleId']
+
 filtCircularObject = (objects, keys)->
   ret = []
   obj = {}
@@ -52,6 +55,7 @@ filtCircularObject = (objects, keys)->
     obj = {}
 
   return ret
+
 
 # ============Routers
 # basic pages
@@ -68,13 +72,15 @@ app.namespace '/', ()->
       req.session.user_name = null
       req.session.user_id = null
     ArticleProvider.findArticlesBriefAllByPage 0, ITEM_PER_PAGE,  (error, as)->
+      filteredArticles = filtCircularObject as, ARTICLE_ATTR
+      console.log filteredArticles
       ArticleProvider.countAll (error, c)->
-        res.render 'index', {title: 'welcome', user: buildUser(req.session.isAuth, req.session.user_email, req.session.user_name, req.session.user_id), articles: as, next_page: 2, total_page: parseInt(c/10+1)}
+        res.render 'index', {title: 'welcome', user: buildUser(req.session.isAuth, req.session.user_email, req.session.user_name, req.session.user_id), articles: filteredArticles, next_page: 2, total_page: parseInt(c/10+1)}
   
   app.get '/p/:page', (req, res)->
     # get particular page
     ArticleProvider.findArticlesBriefAllByPage 10*(parseInt(req.params.page)-1), ITEM_PER_PAGE, (error, articles)->
-      filteredArticles = filtCircularObject articles, ['title', 'body', 'id', 'createdAt', 'updatedAt', 'USERId']
+      filteredArticles = filtCircularObject articles, ARTICLE_ATTR
       if article && articles.length != 0
         res.json({articles: filteredArticles, next_page: parseInt(req.params.page)+1})
       else
@@ -134,7 +140,7 @@ app.namespace '/blog', ()->
   app.get '/search/:query/p/:page', (req, res)->
     ArticleProvider.findArticleByTitlePage req.params.query, 10*(parseInt(req.params.page)-1), ITEM_PER_PAGE, (error, articles)->
       if articles && articles.length !=0
-        filteredArticles = filtCircularObject articles, ['title', 'body', 'id', 'createdAt', 'updatedAt', 'USERId']
+        filteredArticles = filtCircularObject articles, ARTICLE_ATTR
         res.json({articles: filteredArticles, next_page: parseInt(req.params.page)+1})
       else
         res.json({articles: null, next_page: req.params.page})
@@ -180,7 +186,7 @@ app.namespace '/comment', ()->
   app.get '/:aid/p/:page', (req, res)->
     CommentProvider.findCommentsByArticleId 10*(parseInt(req.params.page)-1), ITEM_PER_PAGE, req.params.aid, (error, comments)->
       if comments.length != 0
-        filteredComments = filtCircularObject comments, ['id', 'body', 'createdAt', 'updatedAt', 'ARTICLEId']
+        filteredComments = filtCircularObject comments, COMMENT_ATTR
         res.json {comments: filteredComments, next_page: parseInt(req.params.page)+1}
       else
         res.json {comments: null, next_page: req.params.page}

@@ -1,4 +1,5 @@
 (function() {
+
   module.exports = function(seq, DataTypes) {
     return seq.define('user', {
       name: {
@@ -19,4 +20,5 @@
       }
     });
   };
+
 }).call(this);
